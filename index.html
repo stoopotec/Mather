@@ -4,13 +4,80 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Счётчик</title>
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
     <script src="engine.js"></script>
+
+    <style>
+        body {
+          font-family: Arial, sans-serif;
+          background-color: #f5f5f5;
+        }
+        
+        .container {
+          max-width: 600px;
+          margin: 0 auto;
+          padding: 20px;
+          background-color: #fff;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .input-container {
+          margin-bottom: 20px;
+        }
+        
+        .input-container input {
+          width: 100%;
+          padding: 10px;
+          font-size: 16px;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+        }
+        
+        .transitions-container {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: space-between;
+        }
+        
+        .transition {
+          width: 48%;
+          margin-bottom: 20px;
+          padding: 10px;
+          background-color: #f9f9f9;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+        }
+      </style>
 </head>
 <body>
-    <div>
-        <form action="">
-            <input type="text" name="equation" id="equation" placeholder="put your equation here">
-        </form>
+
+    <div class="container">
+      <div class="input-container">
+
+        <input type="text" name="equation" id="equation" placeholder="put your equation here">
+
+        
+        <button onclick="produceTransitions()">produce</button>
+
+
+      </div>
+
+      <div class="transitions-container">
+
+
+        <template class="transition">
+          <div class="transition">
+
+          </div>
+        </template>
+
+      </div>
     </div>
+
 </body>
 </html>
