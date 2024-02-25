@@ -61,6 +61,26 @@
 
         <input type="text" name="equation" id="equation" placeholder="put your equation here">
 
+
+        
+        <script>
+          const produceTransitions = () =>
+          {
+            let container = document.getElementsByClassName("transitions-container")[0];
+            let template = document.querySelector("template.transition").content.cloneNode(true);
+
+            while (container.firstChild)
+              container.firstChild.remove();
+
+            container.appendChild(template);
+          }
+
+          document.addEventListener("DOMContentLoaded", () => {
+            produceTransitions();
+          });
+          
+        </script>
+
         
         <button onclick="produceTransitions()">produce</button>
 
