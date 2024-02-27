@@ -75,10 +75,14 @@
             let container = document.getElementsByClassName("transitions-container")[0];
             let template = document.querySelector("template.transition").content.cloneNode(true);
 
+            let expr = constructExpression(document.getElementById("equation").value);
+
             while (container.firstChild)
               container.firstChild.remove();
 
+            console.log(template);
             container.appendChild(template);
+            container.getElementsByClassName("possible")[0].innerText = expr.toString();
           }
 
           document.addEventListener("DOMContentLoaded", () => {
@@ -89,19 +93,25 @@
 
       </div>
 
+
+
       <div class="transitions-container">
 
 
-        <template class="transition">
-          <div class="transition">
-            <h2>Math in TeX notation</h2>
-
-            $$x = {-b \pm \sqrt{b^2-4ac} \over 2a}.$$
-
-          </div>
-        </template>
+        
 
       </div>
+      <template class="transition">
+        <div class="transition">
+          <h2>Possible Transition</h2>
+
+          <div class="possible"></div>
+
+        </div>
+      </template>
+
+
+
     </div>
 
 </body>
