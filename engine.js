@@ -147,6 +147,66 @@ class Token
 
 
 
+const regexes = 
+[
+//  {   token(content) { return new Token(content); },
+//      regexp: RegExp(), 
+//      contentRegexp: RegExp() 
+//  },
+    {   token(content) { return new TrashToken(content); },
+        regexp:        /\s+/gm,
+        contentRegexp: /\s+/gm
+    },
+
+    {   token(content) { return new BracketOpen(content); },
+        regexp:        /\(/gm,
+        contentRegexp: /\(/gm
+    },
+    {   token(content) { return new BracketClose(content); },
+        regexp:        /\)/gm,
+        contentRegexp: /\)/gm
+    },
+
+
+    {   token(content) { return new Factorial(content); },
+        regexp:        /\!/gm,
+        contentRegexp: /\!/gm
+    },
+    {   token(content) { return new Addition(content); },
+        regexp:        /\+/gm,
+        contentRegexp: /\+/gm
+    },
+    {   token(content) { return new Substraction(content); },
+        regexp:        /\-/gm,
+        contentRegexp: /\-/gm
+    },
+    {   token(content) { return new Multiplication(content); },
+        regexp:        /\*/gm,
+        contentRegexp: /\*/gm
+    },
+    {   token(content) { return new Division(content); },
+        regexp:        /\//gm,
+        contentRegexp: /\//gm
+    },
+    {   token(content) { return new Modulus(content); },
+        regexp:        /\%/gm,
+        contentRegexp: /\%/gm
+    },
+    {   token(content) { return new Power(content); },
+        regexp:        /\^/gm,
+        contentRegexp: /\^/gm
+    },
+
+
+    {   token(content) { return new Constant(content); },
+        regexp:        /\.\d+|\d+\.\d+|\d+\.|\d+|\./gm, // https://regex101.com/r/XYvJOz/1
+        contentRegexp: /\.\d+|\d+\.\d+|\d+\.|\d+|\./gm
+    },
+    {   token(content) { return new Variable(content); },
+        regexp:        /[a-zA-Zа-яёА-ЯЁ]+/gm,
+        contentRegexp: /[a-zA-Zа-яёА-ЯЁ]+/gm 
+    },
+];
 
 
 
