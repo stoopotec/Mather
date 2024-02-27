@@ -32,23 +32,25 @@
         }
         
         .input-container {
+          display: flex;
+
           margin-bottom: 20px;
           width: fit-content;
           height: min-content;
         }
         
         .input-container * {
+          width: max-content;
           padding: 10px;
           font-size: 16px;
           border: 1px solid #ccc;
           border-radius: 5px;
         }
-        
-        .transitions-container {
-          
-          
-          
+
+        .input-container > textarea {
+          width: 100%;
         }
+
         
         .transition {
           margin-bottom: 20px;
@@ -94,7 +96,6 @@
 
         <template class="transition">
           <div class="transition">
-            <h2>Math in TeX notation</h2>
 
             $$x = {-b \pm \sqrt{b^2-4ac} \over 2a}.$$
 
