@@ -9,8 +9,9 @@ class Token
         this._content = content;
     }
     _content;
-    get content()    { return _content; } 
-    get contentTeX() { return content; }
+    get directContent() { return this._content; }
+    get content()       { return _content; } 
+    get contentTeX()    { return content; }
 }
 
     class TrashToken extends Token
