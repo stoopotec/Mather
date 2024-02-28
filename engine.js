@@ -73,7 +73,7 @@ class Token
                 get inputFrom()  { return 1; }
             }
 
-            class Factorial extends BinaryOperatorToken
+            class Factorial extends UnaryOperatorToken
             {
                 get content()    { return "!"; }
                 get contentTeX() { return "!"; }
