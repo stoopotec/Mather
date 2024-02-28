@@ -32,23 +32,25 @@
         }
         
         .input-container {
+          display: flex;
+
           margin-bottom: 20px;
           width: fit-content;
           height: min-content;
         }
         
         .input-container * {
+          width: max-content;
           padding: 10px;
           font-size: 16px;
           border: 1px solid #ccc;
           border-radius: 5px;
         }
-        
-        .transitions-container {
-          
-          
-          
+
+        .input-container > textarea {
+          width: 100%;
         }
+
         
         .transition {
           margin-bottom: 20px;
@@ -98,18 +100,15 @@
       <div class="transitions-container">
 
 
-        
-
-      </div>
+      </template>
+      
       <template class="transition">
         <div class="transition">
-          <h2>Possible Transition</h2>
+          <h2>Math in TeX notation</h2>
 
-          <div class="possible"></div>
+        <div class="possible"></div>
 
-        </div>
-      </template>
-
+      </div>
 
 
     </div>
