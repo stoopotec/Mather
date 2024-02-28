@@ -134,20 +134,12 @@ class Token
 
         class Constant extends OperandToken
         {
-            constructor(content)
-            {
-                this._content = content;
-            }
             get content()    { return this._content; } 
             get contentTeX() { return this._content; }
         }
 
         class Variable extends OperandToken
         {
-            constructor(name)
-            {
-                this._content = name;
-            }
             get content()    { return this._content; } 
             get contentTeX() { return this._content; }
         }
