@@ -217,6 +217,59 @@ const regexes =
 
 
 
+const constructExpression = (text) =>
+{
+    let tokensMeta = [];
+    // token, start, length
+
+    for (let i = 0; i < regexes.length; ++i)
+    {
+        while ((m = regexes[i].regexp.exec(text)) !== null) {
+            // This is necessary to avoid infinite loops with zero-width matches
+            if (m.index === regexes[i].regexp.lastIndex) ++regexes[i].regexp.lastIndex;
+
+
+            tokensMeta.push(
+                {
+                    token: regexes[i].token(m[0]),
+                    start: m.index,
+                    length: m.length,
+                }
+            );
+        }
+    }
+
+    tokensMeta.sort((a, b) => a.start - b.start);
+
+    let tokens = [];
+    for (let i = 0; i < tokensMeta.length; ++i)
+        tokens.push(tokensMeta[i].token);
+    return new Expression(tokens);
+
+
+}
+
+
+class Expression
+{
+    constructor(tokens)
+    {
+        this.Tokens = tokens;
+    }
+
+    toString()
+    {
+        let str = "";
+        for (let i = 0; i < this.Tokens.length; ++i)
+        {
+            str += this.Tokens[i].directContent;
+        }
+        return str;
+    }
+    Tokens;
+}
+
+
 
 
 
