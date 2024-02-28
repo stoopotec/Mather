@@ -40,6 +40,13 @@ class Token
     }
 
 
+    class Equal extends Token
+    {
+        get content()    { return "="; } 
+        get contentTeX() { return "="; }
+    }
+
+
 
 
 
@@ -165,6 +172,10 @@ const regexes =
     {   token(content) { return new BracketClose(content); },
         regexp:        /\)/gm,
         contentRegexp: /\)/gm
+    },
+    {   token(content) { return new Equal(content); },
+        regexp:        /=/gm,
+        contentRegexp: /=/gm
     },
 
 
