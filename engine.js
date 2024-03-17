@@ -229,13 +229,15 @@ const constructExpression = (text) =>
             if (m.index === regexes[i].regexp.lastIndex) ++regexes[i].regexp.lastIndex;
 
 
-            tokensMeta.push(
-                {
-                    token: regexes[i].token(m[0]),
-                    start: m.index,
-                    length: m.length,
-                }
-            );
+            let tokenMeta = 
+            {
+                token: regexes[i].token(m[0]),
+                start: m.index,
+                length: m.length,
+            };
+
+            if (!(tokenMeta.token instanceof TrashToken))
+                tokensMeta.push(tokenMeta);
         }
     }
 
