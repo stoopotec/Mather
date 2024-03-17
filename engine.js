@@ -264,8 +264,9 @@ class Expression
         let str = "";
         for (let i = 0; i < this.Tokens.length; ++i)
         {
-            str += this.Tokens[i].directContent;
+            str += "\"" + this.Tokens[i].content + "\"; ";
         }
+        console.log("Expr to string: \"" + str + "\"");
         return str;
     }
     Tokens;
