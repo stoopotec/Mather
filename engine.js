@@ -4,6 +4,7 @@
 
 class Token
 {
+    get TokenName()  { return "Token"; }
     constructor(content)
     {
         this._content = content;
@@ -16,6 +17,7 @@ class Token
 
     class TrashToken extends Token
     {
+        get TokenName()  { return "TrashToken"; }
         get content()    { return this._content; } 
         get contentTeX() { return this._content; }
     }
@@ -23,12 +25,14 @@ class Token
 
     class BracketOpen extends Token
     {
+        get TokenName()  { return "BracketOpen"; }
         get content()    { return "("; } 
         get contentTeX() { return "\\left("; }
     }
 
     class BracketClose extends Token
     {
+        get TokenName()  { return "BracketClose"; }
         get content()    { return ")"; } 
         get contentTeX() { return "\\right)"; }
     }
@@ -36,6 +40,7 @@ class Token
 
     class Coma extends Token
     {
+        get TokenName()  { return "Coma"; }
         get content()    { return ","; } 
         get contentTeX() { return ","; }
     }
@@ -43,6 +48,7 @@ class Token
 
     class Equal extends Token
     {
+        get TokenName()  { return "Equal"; }
         get content()    { return "="; } 
         get contentTeX() { return "="; }
     }
@@ -53,17 +59,20 @@ class Token
 
     class OperatorToken extends Token
     {
+        get TokenName()  { return "OperatorToken"; }
         get priority()   { return 0; }
     }
 
         class UnaryOperatorToken extends OperatorToken
         {
+            get TokenName()  { return "UnaryOperatorToken"; }
             get priority()   { return 4; }
             get inputFrom()  { return 0; }
         }
 
             class Function extends UnaryOperatorToken
             {
+                get TokenName()  { return "Function"; }
                 constructor(functionName)
                 {
                     this._content = functionName;
@@ -75,6 +84,7 @@ class Token
 
             class Factorial extends UnaryOperatorToken
             {
+                get TokenName()  { return "Factorial"; }
                 get content()    { return "!"; }
                 get contentTeX() { return "!"; }
                 get inputFrom()  { return -1; }
@@ -82,11 +92,13 @@ class Token
 
         class BinaryOperatorToken extends OperatorToken
         {
+            get TokenName()  { return "BinaryOperatorToken"; }
 
         }
 
             class Addition extends BinaryOperatorToken
             {
+                get TokenName()  { return "Addition"; }
                 get content()    { return "+"; } 
                 get contentTeX() { return "+"; }
                 get priority()   { return 1; }
@@ -94,6 +106,7 @@ class Token
 
             class Substraction extends BinaryOperatorToken
             {
+                get TokenName()  { return "Substraction"; }
                 get content()    { return "-"; } 
                 get contentTeX() { return "-"; }
                 get priority()   { return 1; }
@@ -101,6 +114,7 @@ class Token
 
             class Multiplication extends BinaryOperatorToken
             {
+                get TokenName()  { return "Multiplication"; }
                 get content()    { return "*"; } 
                 get contentTeX() { return "\\cdot"; }
                 get priority()   { return 2; }
@@ -108,6 +122,7 @@ class Token
 
             class Division extends BinaryOperatorToken
             {
+                get TokenName()  { return "Division"; }
                 get content()    { return "/"; } 
                 get contentTeX() { return "\\over"; }
                 get priority()   { return 2; }
@@ -115,6 +130,7 @@ class Token
 
             class Modulus extends BinaryOperatorToken
             {
+                get TokenName()  { return "Modulus"; }
                 get content()    { return "%"; } 
                 get contentTeX() { return "\\%"; }
                 get priority()   { return 2; }
@@ -122,6 +138,7 @@ class Token
 
             class Power extends BinaryOperatorToken
             {
+                get TokenName()  { return "Power"; }
                 get content()    { return "^"; } 
                 get contentTeX() { return "^"; }
                 get priority()   { return 3; }
@@ -129,17 +146,20 @@ class Token
 
     class OperandToken extends Token
     {
+        get TokenName()  { return "OperandToken"; }
 
     }
 
         class Constant extends OperandToken
         {
+            get TokenName()  { return "Constant"; }
             get content()    { return this._content; } 
             get contentTeX() { return this._content; }
         }
 
         class Variable extends OperandToken
         {
+            get TokenName()  { return "Variable"; }
             get content()    { return this._content; } 
             get contentTeX() { return this._content; }
         }
@@ -216,6 +236,37 @@ const regexes =
 
 
 
+class Expression
+{
+    constructor(tokens)
+    {
+        this.Tokens = tokens;
+    }
+
+    toString()
+    {
+        expressionToString(this);
+    }
+    Tokens;
+}
+
+
+const tokensToString = (tokens) => {
+    let str = "";
+    for (let i = 0; i < tokens.length; ++i)
+    {
+        str +=  tokens[i].content + " ";
+    }
+    return str;
+}
+
+
+const expressionToString = (expression) => {
+    return tokensToString(expression.Tokens);
+}
+
+
+
 
 const constructExpression = (text) =>
 {
@@ -252,24 +303,105 @@ const constructExpression = (text) =>
 }
 
 
-class Expression
-{
-    constructor(tokens)
-    {
-        this.Tokens = tokens;
+const constructPermutData = (expression) => {
+    let equivalents = [[]];
+    for (let i = 0; i < expression.Tokens.length; ++i) {
+        if (expression.Tokens[i] instanceof Equal) {
+            equivalents.push([]);
+            continue;
+        }
+        equivalents[equivalents.length-1].push(expression.Tokens[i]);
     }
 
-    toString()
-    {
-        let str = "";
-        for (let i = 0; i < this.Tokens.length; ++i)
-        {
-            str += "\"" + this.Tokens[i].content + "\"; ";
+
+    let permutData = [];
+    let obj = {};
+    Object.assign(obj, expression);
+    for (let i = 0; i < equivalents.length; ++i)
+        for (let j = 0; j < equivalents.length; ++j) {
+            if (i === j) continue;
+            permutData.push({from: equivalents[i], to: equivalents[j]});
         }
-        console.log("Expr to string: \"" + str + "\"");
-        return str;
+    return permutData;
+}
+
+
+var allPermutations = [];
+allPermutations.push(...constructPermutData(constructExpression("a+b=b+a")));
+allPermutations.push(...constructPermutData(constructExpression("a+(b+c)=(a+b)+c")));
+allPermutations.push(...constructPermutData(constructExpression("a+0=a")));
+allPermutations.push(...constructPermutData(constructExpression("a+(-a)=0")));
+
+allPermutations.push(...constructPermutData(constructExpression("a*b=b*a")));
+allPermutations.push(...constructPermutData(constructExpression("a*(b*c)=(a*b)*c")));
+allPermutations.push(...constructPermutData(constructExpression("1*a=a")));
+allPermutations.push(...constructPermutData(constructExpression("a*(1/a)=1")));
+allPermutations.push(...constructPermutData(constructExpression("a+(b*c)=a*b+a*c")));
+
+// allPermutations.push(...constructPermutData(constructExpression("")));
+
+
+
+const tokensSubarrayFromTo = (tokens, tokensSub) => {
+
+    // console.log("\n\n");
+    // console.log("tokens:", tokens);
+    // console.log("tokens sub:", tokensSub);
+
+    let fromToList = [];
+
+    for (let i = 0; i < tokens.length; ++i) {
+        let match = true;
+        
+        for (let j = i; j < tokensSub.length + i && j < tokens.length; ++j) {
+            
+            if (tokens[j].TokenName !== tokensSub[j - i].TokenName) {
+                match = false;
+                break;
+            }
+        
+        }
+
+        if (match) fromToList.push({ from: i, to: i + tokensSub.length });
     }
-    Tokens;
+
+    return fromToList;
+}
+
+const getPermutations = (expression) => {
+
+    let permuts = [];
+
+    console.log("possible permutations:", allPermutations.length);
+
+    for (let i = 0; i < allPermutations.length; ++i) {
+        console.log("\n\n");
+
+        console.log("permutation", i, "(" + tokensToString(allPermutations[i].from) + " =>  " + tokensToString(allPermutations[i].to) + ")");
+
+        let fromToList = tokensSubarrayFromTo(expression.Tokens, allPermutations[i].from);
+        console.log("from to list:", fromToList);
+
+        for (let j = 0; j < fromToList.length; ++j ) {
+            
+            let obj = JSON.parse(JSON.stringify(expression));
+
+            console.log("expression before:", expressionToString(obj));
+            //obj.toString = Expression.toString;
+            //console.log(expressionToString(obj));
+            obj.Tokens.splice(fromToList[j].from, fromToList[j].to - fromToList[j].from);
+            obj.Tokens.splice(fromToList[j].from, 0, ...allPermutations[i].to);
+            //if (newExpr.length > 0)
+            console.log("expression after:", expressionToString(obj));
+
+            permuts.push(obj);
+        }
+
+
+    }
+
+    return permuts;
+
 }
 
 
