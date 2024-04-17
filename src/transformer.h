@@ -60,7 +60,7 @@ struct equation {
 const char* get_string_from_symbol_type(enum symbol_type type);
 
 
-struct symbol   get_next_symbol(const char* string, size_t* use_to);
+struct symbol   get_next_symbol(const char* string, size_t* spaces, size_t* text_len);
 struct equation get_equation_from_string(const char* string);
 
 
