@@ -22,12 +22,13 @@ int main() {
         printf("received: ");
 
         for (size_t i = 0; i < eq.symbols.length; ++i) {
-            if (eq.symbols.data[i].type >= 0)
+            if ((long)eq.symbols.data[i].type >= 0)
                 printf("%s ", get_string_from_symbol_type(eq.symbols.data[i].type));
             else {
                 for (size_t j = 0; j < eq.symbols.data[i].text_len; ++j) {
                     putchar(eq.symbols.data[i].text[j]);
                 }
+                putchar(' ');
             }
         }
         printf("\n\n");
