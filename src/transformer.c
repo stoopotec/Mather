@@ -65,7 +65,8 @@ const char* get_string_from_symbol_type(enum symbol_type type) {
     for (size_t i = 0; i < LEN(symbols_table); ++i) {
         if (symbols_table[i].value == type) return symbols_table[i].key;
     }
-    return "NULL";
+    if (type == VARIABLE) return "VARIABLE";
+    return NULL;
 }
 
 
