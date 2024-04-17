@@ -69,35 +69,65 @@ const char* get_string_from_symbol_type(enum symbol_type type) {
 }
 
 
+int is_word_symbol(char c) {
+    return (
+        (c >= 'a' && c <= 'z') ||
+        (c >= 'A' && c <= 'Z') // ||
+        // (c >= '0' && c <= '1') ||
+        // (c == '_')
+    );
+}
 
-struct symbol   get_next_symbol(const char* string, size_t* use_to) {
-    size_t start = 0, text_len = 0;
+const char*     get_next_word(const char* string, size_t* spaces, size_t* word_len) {
 
-    for (; string[start] != '\0'; ++start) 
+    for (*spaces = 0; string[(*spaces)] != '\0'; ++(*spaces)) 
         if (
-            string[start] != ' ' && 
-            string[start] != '\t' && 
-            string[start] != '\n' 
+            string[(*spaces)] !=  ' ' && 
+            string[(*spaces)] != '\t' && 
+            string[(*spaces)] != '\n' 
         ) break;
+    string = string + *spaces;
 
+
+
+    for (*word_len = 0; is_word_symbol(string[*word_len]); ++(*word_len)) {}
+
+    return string;
+
+}
+
+
+
+
+
+
+
+struct symbol   get_next_symbol(const char* string, size_t* spaces, size_t* text_len) {
+
+    for (*spaces = 0; string[(*spaces)] != '\0'; ++(*spaces)) 
+        if (
+            string[(*spaces)] !=  ' ' && 
+            string[(*spaces)] != '\t' && 
+            string[(*spaces)] != '\n' 
+        ) break;
+    string = string + *spaces;
 
     for (size_t i = 0; i < LEN(symbols_table); ++i) {
         int accept = 1;
-        text_len = 0;
+        *text_len = 0;
         for (size_t j = 0; symbols_table[i].key[j] != '\0'; ++j) {
-            if (symbols_table[i].key[j] != string[start + j]) {
+            if (symbols_table[i].key[j] != string[j]) {
                 accept = 0;
                 break;
             }
-            if (symbols_table[i].key[j + 1] == '\0') text_len = j + 1;
+            if (symbols_table[i].key[j + 1] == '\0') *text_len = j + 1;
         }
         if (accept) {
             struct symbol symb = {
                 .type = symbols_table[i].value,
-                .text = string + start,
-                .text_len = text_len,
+                .text = string,
+                .text_len = *text_len,
             };
-            *use_to = start + text_len;
             return symb;
         };
     }
@@ -107,7 +137,6 @@ struct symbol   get_next_symbol(const char* string, size_t* use_to) {
         .text = NULL,
         .text_len = 0,
     };
-    *use_to = start;
     return symb;
 }
 
