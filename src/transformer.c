@@ -73,7 +73,12 @@ const char* get_string_from_symbol_type(enum symbol_type type) {
 struct symbol   get_next_symbol(const char* string, size_t* use_to) {
     size_t start = 0, text_len = 0;
 
-    for (; string[start] != '\0'; ++start) if (string[start] != ' ') break;
+    for (; string[start] != '\0'; ++start) 
+        if (
+            string[start] != ' ' && 
+            string[start] != '\t' && 
+            string[start] != '\n' 
+        ) break;
 
 
     for (size_t i = 0; i < LEN(symbols_table); ++i) {
