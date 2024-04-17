@@ -137,6 +137,21 @@ struct symbol   get_next_symbol(const char* string, size_t* spaces, size_t* text
         .text = NULL,
         .text_len = 0,
     };
+
+
+    size_t word_spaces = 0;
+    const char* nw = get_next_word(string, word_spaces, text_len);
+
+    if (*text_len != 0) {
+        symb.text = nw;
+        symb.text_len = *text_len;
+        symb.type = VARIABLE;
+        *spaces = *spaces + word_spaces;
+        return symb;
+    }
+
+
+
     return symb;
 }
 
