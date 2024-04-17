@@ -145,22 +145,23 @@ struct equation get_equation_from_string(const char* string) {
 
     struct equation eq = {0};
 
-    size_t use_to = 0;
+    size_t spaces = 0;
+    size_t word_length = 0;
 
-    for (size_t i = 0; string[i] != '\0'; i += use_to) {
-        struct symbol next_symbol = get_next_symbol(string + i, &use_to);
+    for (size_t i = 0; string[i] != '\0'; i += (spaces + word_length)) {
+        struct symbol next_symbol = get_next_symbol(string + i, &spaces, &word_length);
 
-        printf("nextw symblol: %ld (%s), use_to: %ld, text_len: %ld\n", 
+        printf("nextw symblol: %ld (%s), spaces: %ld, word_length: %ld\n", 
             next_symbol.type, 
             get_string_from_symbol_type(next_symbol.type), 
-            use_to, 
-            next_symbol.text_len
+            spaces, 
+            word_length
         );
 
         if (next_symbol.type) {
             LIST_APPEND(next_symbol, eq.symbols, struct symbol);
         }
-        else use_to = 1;
+        else spaces = 1;
     }
 
 
