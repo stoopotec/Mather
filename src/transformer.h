@@ -50,9 +50,10 @@ struct symbol {
 };
 typedef struct symbol symbol_t;
 
+LIST(symbol_t);
 
 struct equation {
-    LIST(symbol_t) symbols;
+    struct list_symbol_t symbols;
 };
 
 
