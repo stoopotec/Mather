@@ -57,6 +57,13 @@ struct symbol_kv symbols_table[] = {
     { "("                  , BRACE_OPEN_ROUND },
     { ")"                  , BRACE_CLOSE_ROUND },
 
+
+
+    { "+"                  , PLUS },
+    { "-"                  , MINUS },
+    { "*"                  , MULTIPLY },
+    { "/"                  , DIVIDE },
+
 };
 #define LEN(x) (sizeof(x) / sizeof(*(x)))
 
