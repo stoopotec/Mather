@@ -10,17 +10,25 @@
 #define LIST_FREE(list) (LIST_FREE_((list).data))
 
 #define LIST_APPEND(x, list, data_type) {\
-    if ((list).data == NULL) {\
-        (list).alloc_length = APPEND_ALLOC_LENGTH;\
-        (list).length = 0;\
-        (list).data = (data_type*)LIST_MALLOC_((list).alloc_length * sizeof(*((list).data)));\
+    if (list.data == NULL) {\
+        list.alloc_length = APPEND_ALLOC_LENGTH;\
+        list.length = 0;\
+        list.data = (data_type*)LIST_MALLOC_(list.alloc_length * sizeof(*(list.data)));\
     }\
-    if ((list).length >= (list).alloc_length) {\
-        (list).alloc_length += APPEND_ALLOC_LENGTH;\
-        (list).data = (data_type*)LIST_REALLOC_(((list).data), (list).alloc_length * sizeof(*((list).data)));\
+    if (list.length >= list.alloc_length) {\
+        list.alloc_length += APPEND_ALLOC_LENGTH;\
+        list.data = (data_type*)LIST_REALLOC_((list.data), list.alloc_length * sizeof(*(list.data)));\
     }\
-    ((list)).data[((list)).length++] = (x);\
+    (list).data[(list).length++] = (x);\
 }
+
+#define LIST_PUSH_AT(x, list, index, data_type) {\
+    if (list.data == NULL) {\
+        list.alloc_length = APPEND_ALLOC_LENGTH;\
+        list.length = 0;\
+        list.data = (data_type*)LIST_MALLOC_(list.alloc_length * sizeof(*(list.data)));\
+    }\
+}\
 
 #define LIST(type) struct list_##type {\
     type* data;\
