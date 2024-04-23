@@ -192,3 +192,34 @@ struct equation get_equation_from_string(const char* string) {
 
 }
 
+
+
+
+
+unsigned char get_operation_proirity(enum symbol_type symb) {
+    return (symb >> (8 * 2)) & 8;
+}
+
+
+
+struct equation  to_reverse_polish(struct equation eq) {
+
+    struct equation eq_r = {.symbols = braces_to_reverse_polish(eq.symbols, 0)};  
+    return eq_r;
+    
+}
+
+
+struct list_symbol_t braces_to_reverse_polish(const struct list_symbol_t symbols, size_t from) {
+
+    struct list_symbol_t symbols_r = {0};
+    
+    for (size_t i = 0; i < symbols.length; ++i) {
+        if (symbols.data[i].type & VARIABLE) {
+            LIST_APPEND(symbols.data[i], symbols_r, symbol_t);
+        }
+    }
+
+}
+
+
