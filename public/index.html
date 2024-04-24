@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Счётчик</title>
+    <title>Mather</title>
 
     <script type="text/javascript"
       src="http://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
@@ -11,6 +11,7 @@
 
     <script src="engine.js"></script>
     <link rel="stylesheet" href="menu.css">
+    <link rel="stylesheet" href="global.css">
 
 </head>
 <body>
@@ -23,61 +24,7 @@
         <button onclick="produceTransitions()">produce</button>
 
 
-        <script>
-          const produceTransitions = () =>
-          {
-            let expr = constructExpression(document.getElementById("equation").value); 
-            console.log(expr, expr.toString());
-            let exprs = getPermutations(expr);
-            console.log(exprs[0], exprs[0].toString());
-
-            
-            
-            let container = document.getElementsByClassName("transitions-container")[0];
-            let templateHTML = document.querySelector("template.transition").innerHTML;
-            
-            while (container.firstChild)
-              container.firstChild.remove();
-
-
-              let transitionsContainer = document.querySelector('.transitions-container');
-
-              // Создаем 10 блоков transition
-              for (let i = 1; i <= exprs.length; i++) {
-                // Клонируем шаблон transition
-                let template = document.querySelector('.transition');
-                let clone = template.content.cloneNode(true);
-
-                // Вставляем номер блока в transition-content
-                let transitionContent = clone.querySelector('#transition-content');
-                console.log(exprs[i], expressionToString(exprs[i]));
-                transitionContent.textContent = expressionToString(exprs[i]);
-
-                // Добавляем блок transition в transitions-container
-                transitionsContainer.appendChild(clone);
-              }
-
-            // for (let i = 0; i < exprs.length; ++i) {
-
-            //   container.innerHTML += templateHTML;
-
-            //   let elem = container.querySelector("#transition:last-child");
-            //   console.log(elem);
-              
-            //   //elem[(elems.length-1)].getElementById("transition-content").InnerText = exprs[i].toString();
-
-            //   // let newField = template.content.cloneNode(true);
-            //   // console.
-            //   // newField.getElementsByClassName("possible")[0].innerText = expr.toString();
-            //   // container.appendChild(newField);
-            // }
-          }
-
-          // document.addEventListener("DOMContentLoaded", () => {
-          //   produceTransitions();
-          // });
-          
-        </script>
+        <script src="transitions.js"></script>
 
       </div>
 
@@ -99,6 +46,38 @@
           
 
     </div>
+
+    <footer class="footer">
+      <div class="waves">
+        <div class="wave" id="wave1"></div>
+        <div class="wave" id="wave2"></div>
+        <div class="wave" id="wave3"></div>
+        <div class="wave" id="wave4"></div>
+      </div>
+      <ul class="social-icon">
+        <li class="social-icon__item"><a class="social-icon__link" href="#">
+            <ion-icon name="logo-facebook"></ion-icon>
+          </a></li>
+        <li class="social-icon__item"><a class="social-icon__link" href="#">
+            <ion-icon name="logo-twitter"></ion-icon>
+          </a></li>
+        <li class="social-icon__item"><a class="social-icon__link" href="#">
+            <ion-icon name="logo-linkedin"></ion-icon>
+          </a></li>
+        <li class="social-icon__item"><a class="social-icon__link" href="#">
+            <ion-icon name="logo-instagram"></ion-icon>
+          </a></li>
+      </ul>
+      <ul class="menu">
+        <li class="menu__item"><a class="menu__link" href="#">Home</a></li>
+        <li class="menu__item"><a class="menu__link" href="#">About</a></li>
+        <li class="menu__item"><a class="menu__link" href="#">Services</a></li>
+        <li class="menu__item"><a class="menu__link" href="#">Team</a></li>
+        <li class="menu__item"><a class="menu__link" href="#">Contact</a></li>
+  
+      </ul>
+      <p>&copy;2021 Nadine Coelho | All Rights Reserved</p>
+    </footer>
 
 </body>
 </html>
