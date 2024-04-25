@@ -48,12 +48,12 @@ int serve_client(int socketfd) {
 
     size_t buffer_length;
     char* buffer = read_all_alloc(&buffer_length, socketfd);
-    while (buffer == NULL) {
-        printf("INFO: buffer is NULL\n");
-        buffer = read_all_alloc(&buffer_length, socketfd);
+    if (buffer == NULL) {
+        fprintf(stderr, "ERROR: buffer is NULL\n");
+        exit(EXIT_FAILURE);
     }
 
-    printf("%s\n", buffer);
+    for (size_t i = 0; i < buffer_length; ++i) { putchar(buffer[i]); }
 
 
     char* filename;
@@ -138,17 +138,21 @@ int serve_client(int socketfd) {
 
 char* read_all_alloc(size_t* len, int socketfd) {
     size_t allocated = 0;
+    *len = 0;
     char* data = (char*)malloc(allocated * sizeof(*data));
     do {
         allocated += 1024;
         data = (char*)realloc(data, allocated);
         ssize_t read_len = read(socketfd, data + *len, allocated - *len);
+        *len += read_len;
+        printf("last char: %c (%d), read_len: %d\n", data[*len - 1], (int)data[*len - 1], read_len);
         if (read_len == 0) break;
         if (read_len < 0) {
             free(data);
+            *len = 0;
             return NULL;
         }
-    } while (1);
+    } while (0);
     return data;
 }
 

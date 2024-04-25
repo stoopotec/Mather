@@ -1,4 +1,3 @@
-#define DEBUG
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -9,36 +8,63 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
+#include <signal.h>
+
 #include "internet.h"
 #include "server.h"
 
-#define PORT 6969
+int socketfd;
+
+void close_socket(int integer) {
+    printf("integer: %d\n");
+    close(socketfd);
+}
 
 
-
-int main(int argc, char** argv) {
-
-
-    printf("INFO: creating socket...\n");
-
-    socklen_t address_len;
-    struct sockaddr address = create_sockaddr(&address_len, PORT);
-
-    int server_socket = create_server_socket(&address);
-    if (server_socket < 0) {
-        perror("ERROR: cannot create socket\n");
-        return EXIT_FAILURE;
+int main() {
+    socketfd = socket(AF_INET, SOCK_STREAM, 0);
+    if (-1 == socketfd) {
+        fprintf(stderr, "ERROR: cannot create socket\n");
+        exit(EXIT_FAILURE);
     }
 
-    printf("INFO: server on line! you can access in by http://localhost:6969/index.html\n");
+
+    signal(SIGINT , (__sighandler_t)&close_socket);
 
 
+    struct sockaddr_in addr_in;
+    memset(&addr_in, 0, sizeof(addr_in));
+    addr_in.sin_family = AF_INET;
+    addr_in.sin_port = htons(8080);
+    addr_in.sin_addr.s_addr = INADDR_ANY;
+
+
+    if (-1 == bind(socketfd, (struct sockaddr*)&addr_in, sizeof(addr_in))) {
+        fprintf(stderr, "ERROR: cannot bind\n");
+        exit(EXIT_FAILURE);
+    }
+
+    if (-1 == listen(socketfd, 10)) {
+        fprintf(stderr, "ERROR: cannot listen\n");
+        exit(EXIT_FAILURE);
+    }
 
     while (1)
-        serve_client(accept(server_socket, (struct sockaddr*)&address, &address_len));
+        serve_client(accept(socketfd, NULL, NULL));
+
+    // int clientfd = accept(socketfd, NULL, NULL);
+
+    // char buffer[10000];
 
 
-    close(server_socket);
+    // read(clientfd, buffer, sizeof(buffer));
+    // printf("%s\n", buffer);
+
+
+    // close(clientfd);
+
+
+    close(socketfd);
 
 
 
