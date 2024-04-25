@@ -52,17 +52,6 @@ int main() {
     while (1)
         serve_client(accept(socketfd, NULL, NULL));
 
-    // int clientfd = accept(socketfd, NULL, NULL);
-
-    // char buffer[10000];
-
-
-    // read(clientfd, buffer, sizeof(buffer));
-    // printf("%s\n", buffer);
-
-
-    // close(clientfd);
-
 
     close(socketfd);
 
