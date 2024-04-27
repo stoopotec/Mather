@@ -143,8 +143,9 @@ char* read_all_alloc(size_t* len, int socketfd) {
         allocated += 1024;
         data = (char*)realloc(data, allocated);
         ssize_t read_len = read(socketfd, data + *len, allocated - *len);
+        if (-1 == read_len) return NULL;
         *len += read_len;
-        printf("last char: %c (%d), read_len: %d\n", data[*len - 1], (int)data[*len - 1], read_len);
+        if ((size_t)read_len == (allocated - *len - read_len)) break;
         if (read_len == 0) break;
         if (read_len < 0) {
             free(data);
