@@ -42,6 +42,7 @@ char* whatFileWant(char* http_header) {
 
 int serve_client(int socketfd) {
 
+    if (-1 == socketfd) return -1;
 
     printf("INFO: new connection, will serve like web server\n");
 
