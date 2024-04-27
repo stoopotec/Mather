@@ -53,6 +53,8 @@ int main() {
         exit(EXIT_FAILURE);
     }
 
+    printf("INFO: server running! you can get acsex it by http://localhost:%d/index.html\n", PORT);
+
     while (1)
         serve_client(accept(socketfd, NULL, NULL));
 
