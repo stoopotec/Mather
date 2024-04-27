@@ -106,7 +106,7 @@ int serve_client(int socketfd) {
 
 
     char* response = (char*)malloc((content_index + 2048) * sizeof(*response));
-    sprintf(response, 
+    size_t response_len = sprintf(response, 
         "HTTP/1.1 200 OK\n"
         "Server: Prikol\n"
         "Content-Type: %s; charset=utf-8\n"
@@ -116,8 +116,6 @@ int serve_client(int socketfd) {
         "\n"
         "%s", content_type, content_index, content
     );
-    size_t response_len = 0;
-    for (; response[response_len] != '\0'; ++response_len) {}
     
 
     send(socketfd, response, response_len, 0);
