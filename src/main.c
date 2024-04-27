@@ -13,11 +13,15 @@
 #include "internet.h"
 #include "server.h"
 
+
+#define PORT 8080
+
+
 int socketfd;
 
 void close_socket(int integer) {
-    printf("integer: %d\n");
     close(socketfd);
+    exit(EXIT_SUCCESS);
 }
 
 
@@ -35,7 +39,7 @@ int main() {
     struct sockaddr_in addr_in;
     memset(&addr_in, 0, sizeof(addr_in));
     addr_in.sin_family = AF_INET;
-    addr_in.sin_port = htons(8080);
+    addr_in.sin_port = htons(PORT);
     addr_in.sin_addr.s_addr = INADDR_ANY;
 
 
