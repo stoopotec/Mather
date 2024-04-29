@@ -22,11 +22,28 @@ int main() {
         printf("received: ");
 
         for (size_t i = 0; i < eq.symbols.length; ++i) {
-            if ((long)eq.symbols.data[i].type >= 0)
+            if (eq.symbols.data[i].type != VARIABLE)
                 printf("%s ", get_string_from_symbol_type(eq.symbols.data[i].type));
             else {
                 for (size_t j = 0; j < eq.symbols.data[i].text_len; ++j) {
                     putchar(eq.symbols.data[i].text[j]);
+                }
+                putchar(' ');
+            }
+        }
+        printf("\n\n");
+
+
+        struct equation eq_p = to_reverse_polish(eq);
+        
+        printf("to reverse polish: ");
+
+        for (size_t i = 0; i < eq_p.symbols.length; ++i) {
+            if (eq_p.symbols.data[i].type != VARIABLE)
+                printf("%s ", get_string_from_symbol_type(eq_p.symbols.data[i].type));
+            else {
+                for (size_t j = 0; j < eq_p.symbols.data[i].text_len; ++j) {
+                    putchar(eq_p.symbols.data[i].text[j]);
                 }
                 putchar(' ');
             }
