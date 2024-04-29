@@ -12,6 +12,12 @@
 #define MAX(a, b) ((a) < (b) ? (b) : (a))
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
 
+#define SWAP(a, b, data_type) {\
+    data_type x = a;\
+    a = b;\
+    b = x;\
+}\
+
 
 #define LIST_FREE(list) (LIST_FREE_((list).data))
 
