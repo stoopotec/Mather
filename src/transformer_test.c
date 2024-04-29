@@ -1,9 +1,33 @@
 #include <stdio.h>
 
 #include "transformer.h"
+#include "list.h"
 
 
 int main() {
+
+
+    // LIST(int) list = {0};
+
+    // LIST_APPEND(10, list, int);
+    // LIST_APPEND(20, list, int);
+    // LIST_APPEND(30, list, int);
+    // LIST_APPEND(40, list, int);
+    // LIST_APPEND(50, list, int);
+
+
+
+    // int arr[] = {1, 2, 3, 4};
+    // const size_t arr_len = sizeof(arr) / sizeof(*arr);
+
+    // LIST_PUSH_RANGE_AT(arr, arr_len, list, arr[1], int);
+
+    // for (size_t i = 0; i < list.length; ++i) printf("%2d; ", list.data[i]); putchar('\n');
+
+    // return 0;
+
+
+
     
     char buffer[2056];
 
