@@ -2,9 +2,27 @@
 
 #include <string.h>
 
-#define LIST_MALLOC_ malloc
-#define LIST_REALLOC_ realloc
-#define LIST_FREE_ free
+
+#ifndef LIST_MALLOC_
+    #include <stdlib.h>
+    #define LIST_MALLOC_ malloc
+#endif
+
+#ifndef LIST_CALLOC_
+    #include <stdlib.h>
+    #define LIST_CALLOC_ calloc
+#endif
+
+#ifndef LIST_REALLOC_
+    #include <stdlib.h>
+    #define LIST_REALLOC_ realloc
+#endif
+
+#ifndef LIST_FREE_
+    #include <stdlib.h>
+    #define LIST_FREE_ free
+#endif
+
 
 #define APPEND_ALLOC_LENGTH ((size_t)10)
 
