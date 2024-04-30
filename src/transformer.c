@@ -76,6 +76,32 @@ const char* get_string_from_symbol_type(enum symbol_type type) {
     return "NULL";
 }
 
+char* soviet_union = NULL;
+size_t soviet_union_len = 0;
+
+const char* get_string_from_symbol(struct symbol symbol) {
+    for (size_t i = 0; i < LEN(symbols_table); ++i) {
+        if (symbols_table[i].value == symbol.type) return symbols_table[i].key;
+    }
+    if (symbol.text != NULL) {
+        if (soviet_union == NULL) {
+
+            soviet_union_len = symbol.text_len+1;
+            soviet_union = (char*)malloc(soviet_union_len);
+
+        } else if (soviet_union_len-1 < symbol.text_len) {
+
+            soviet_union_len = symbol.text_len+1;
+            soviet_union = (char*)realloc(soviet_union, soviet_union_len);
+
+        }
+        memcpy(soviet_union, symbol.text, symbol.text_len + 1);
+        soviet_union[symbol.text_len] = '\0';
+        return soviet_union;
+    }
+    return "NULL";
+}
+
 
 int is_word_symbol(char c) {
     return (
