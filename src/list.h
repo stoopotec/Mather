@@ -50,6 +50,18 @@
     list.data = (data_type*)LIST_REALLOC_((list.data), list.alloc_length * sizeof(*(list.data)));\
 }\
 
+#define LIST_INIT(list, data_type) {\
+    list.alloc_length = LIST_ALLOC_LENGTH;\
+    list.length = 0;\
+    list.data = (data_type*)LIST_CALLOC_(list.alloc_length, sizeof(data_type));\
+}\
+
+#define LIST_INIT_LEN(list, alloc_len, data_type) {\
+    list.alloc_length = alloc_len;\
+    list.length = 0;\
+    list.data = (data_type*)LIST_CALLOC_(list.alloc_length, sizeof(data_type));\
+}\
+
 
 #define LIST_APPEND(x, list, data_type) {\
     if (list.data == NULL) {\
