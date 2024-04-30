@@ -59,9 +59,33 @@ struct equation {
     struct list_symbol_t symbols;
 };
 
+typedef struct equation equation_t;
+
+
+
+
+struct equation_tree {
+    symbol_t symbol;
+    struct list_equation_tree_t {
+        struct equation_tree* data;
+        size_t length;
+        size_t alloc_length;
+    } sub_equations;
+    int filled;
+};
+
+#define NULL_TREE {\
+    .symbol = NULL_SYMBOL,\
+    .sub_equations = {0},\
+    .filled = 0\
+}
+
+void add_symbol_to_equation_tree(symbol_t symbol, struct equation_tree* tree);
+void print_equation_tree(struct equation_tree* tree, size_t zindex);
 
 
 const char* get_string_from_symbol_type(enum symbol_type type);
+const char* get_string_from_symbol(struct symbol symbol);
 
 
 struct symbol   get_next_symbol(const char* string, size_t* spaces, size_t* text_len);

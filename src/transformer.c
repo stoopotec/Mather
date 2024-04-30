@@ -305,3 +305,106 @@ struct equation  to_reverse_polish(struct equation eq) {
 
 
 
+
+const struct equation_tree null_tree = NULL_TREE;
+
+struct equation* get_all_transformations_s(const char* string, size_t* transformations) {
+    struct equation eq = get_equation_from_string(string);
+    struct equation* r = get_all_transformations(&eq, transformations);
+    LIST_FREE(eq.symbols);
+    return r;
+}
+
+struct equation* get_all_transformations(struct equation* equation, size_t* transformations) {
+
+    LIST(equation_t) equations_r = {0};
+
+
+    struct equation_tree eq_tree = null_tree;
+    for (size_t i = equation->symbols.length-1; i < equation->symbols.length; --i) {
+
+    }
+
+
+    *transformations = equations_r.length;
+    return equations_r.data;
+
+}
+
+
+
+unsigned char get_operator_arity(enum symbol_type oper) {
+    if (oper & ALGEBRAIC_OPERATOR) {
+        return ((oper >> 8) & 0b11111111);
+    }
+    return 0;
+}
+
+
+
+void add_symbol_to_equation_tree(symbol_t symbol, struct equation_tree* tree) {
+
+    if (tree->symbol.type == NULL_SYMBOL) {
+        // printf("BT: symbol [%s] add in label\n", get_string_from_symbol((struct symbol)symbol));
+        tree->symbol = symbol;
+        if (tree->symbol.type & VARIABLE) {
+            tree->filled = 1;
+            return;
+        }
+        LIST_INIT_LEN(tree->sub_equations, get_operator_arity(tree->symbol.type), struct equation_tree);
+        goto check;
+    }
+
+    if (tree->symbol.type & VARIABLE) {
+        printf("BT: trying to add symbol to variable tree node (filled: %s)\n", tree->filled ? "true" : "false");
+        tree->filled = 1;
+        return;
+    }
+
+    for (size_t i = 0; i < tree->sub_equations.alloc_length; ++i) {
+        if (!tree->sub_equations.data[i].filled) {
+            add_symbol_to_equation_tree(symbol, tree->sub_equations.data + i);
+            tree->sub_equations.length = i+1;
+            goto check;
+        }
+    }
+    
+
+    // if (tree->sub_equations.length < get_operator_arity(symbol.type)) {
+    //     LIST_APPEND(null_tree, tree->sub_equations, struct equation_tree)
+    // }
+    // else 
+    printf(
+        "BT: WARN! symbols in stack trace more than operator can handle!\n"
+        "\tsymbol: [%s]\n"
+        , get_string_from_symbol(tree->symbol)
+
+    );
+
+    // tree->sub_equations.data[tree->sub_equations.length-1].symbol = symbol;
+    // if (tree->sub_equations.length >= get_operator_arity(symbol.type))
+    //     tree->filled = 1;
+    
+check:
+
+    if (tree->sub_equations.length < get_operator_arity(tree->symbol.type) && tree->filled)
+    printf("BT: hey! in fact you dont filled but you write so! symbol: [%s]\n", get_string_from_symbol(tree->symbol));
+    
+    if (tree->sub_equations.length >= get_operator_arity(tree->symbol.type))
+        tree->filled = 1;
+
+    
+}
+
+void print_equation_tree(struct equation_tree* tree, size_t zindex) {
+    for (size_t i = 0; i < zindex; ++i) putchar(' ');
+    printf("[%s]", get_string_from_symbol(tree->symbol));
+    if (tree->sub_equations.length != (size_t)get_operator_arity(tree->symbol.type))
+        printf(" (sub length: %ld, but would be %ld)",
+            tree->sub_equations.length,
+            (size_t)get_operator_arity(tree->symbol.type)
+        );
+    putchar('\n');
+    for (size_t i = 0; i < tree->sub_equations.length; ++i)
+        print_equation_tree(tree->sub_equations.data + i, zindex+1);
+}
