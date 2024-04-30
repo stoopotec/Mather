@@ -226,20 +226,32 @@ unsigned char get_operation_proirity(enum symbol_type symb) {
     return (symb >> (8*2)) & 0b11111111;
 }
 
+#define PRINT_SYMBOL_LIST(list) \
+        for (size_t s = 0; s < list.length; ++s)\
+        {\
+            if (where_paste == s) printf("_ ");\
+            printf("%s ", get_string_from_symbol(list.data[s]));\
+        }\
+        printf("\n"); 
+
 
 struct list_symbol_t braces_to_reverse_polish(const struct list_symbol_t symbols, size_t from, size_t* processed_count) {
 
     struct list_symbol_t symbols_r = {0};
     size_t where_paste = symbols_r.length; // which is 0
-    unsigned char previous_braces = 0;
+    size_t previous_braces_end = 0;
     
     for (size_t i = from; i < symbols.length; ++i) {
-        if (symbols.data[i].type & VARIABLE) { printf("RP: %3ld [[ %s ]]\n", i, get_string_from_symbol_type(symbols.data[i].type));
+        if (symbols.data[i].type & VARIABLE) { 
+
+            printf("RP: %3ld [[ %s ]] ", i, get_string_from_symbol(symbols.data[i]));
             LIST_PUSH_AT(symbols.data[i], symbols_r, where_paste, symbol_t);
             where_paste = symbols_r.length;
-            continue;
-        }
-        if (symbols.data[i].type & ALGEBRAIC_OPERATOR) { printf("RP: %3ld [[ %s ]]\n", i, get_string_from_symbol_type(symbols.data[i].type));
+            PRINT_SYMBOL_LIST(symbols_r);
+       
+        } else if (symbols.data[i].type & ALGEBRAIC_OPERATOR) { 
+
+            printf("RP: %3ld [[ %s ]] ", i, get_string_from_symbol(symbols.data[i]));
             LIST_APPEND(symbols.data[i], symbols_r, symbol_t);
             where_paste = symbols_r.length - 1; // useless
 
@@ -247,29 +259,33 @@ struct list_symbol_t braces_to_reverse_polish(const struct list_symbol_t symbols
             //     (symbols_r.data[symbols_r.length-2].type & ALGEBRAIC_OPERATOR) ? "true" : "false",
             //     (get_operation_proirity(symbols_r.data[symbols_r.length-2].type) < get_operation_proirity(symbols_r.data[symbols_r.length-1].type)) ? "true" : "false"
             // );
+            PRINT_SYMBOL_LIST(symbols_r);
             if ((symbols_r.data[symbols_r.length-2].type & ALGEBRAIC_OPERATOR) 
+                && (previous_braces_end < symbols_r.length-2)
                 && (get_operation_proirity(symbols_r.data[symbols_r.length-2].type) < get_operation_proirity(symbols_r.data[symbols_r.length-1].type))
-                && !previous_braces
             )
             {
-                printf("RP: SWAP!\n");
+                printf("RP: %3ld %7s ", i, "SWAP!");
                 SWAP(symbols_r.data[symbols_r.length-1], symbols_r.data[symbols_r.length-2], symbol_t);
                 where_paste -= 1;
+                PRINT_SYMBOL_LIST(symbols_r);
             }
-            previous_braces = 0;
-            continue;
-        }
-        if (symbols.data[i].type == BRACE_OPEN_ROUND) { printf("RP: %3ld [[ ( ]]\n", i);
+        
+        } else if (symbols.data[i].type == BRACE_OPEN_ROUND) { 
+
+            printf("RP: %3ld [[ ( ]]\n", i);
             size_t pc = 0;
             struct list_symbol_t braces_stuff = braces_to_reverse_polish(symbols, i+1, &pc);
             i += pc;
             LIST_PUSH_RANGE_AT(braces_stuff.data, braces_stuff.length, symbols_r, where_paste, symbol_t);
+            previous_braces_end = where_paste + braces_stuff.length - 1;
             LIST_FREE(braces_stuff);
             where_paste = symbols_r.length;
-            previous_braces = ~0;
-            continue;
-        }
-        if (symbols.data[i].type == BRACE_CLOSE_ROUND) { printf("RP: %3ld [[ ) ]]\n", i);
+            PRINT_SYMBOL_LIST(symbols_r);
+       
+        } else if (symbols.data[i].type == BRACE_CLOSE_ROUND) { 
+
+            printf("RP: %3ld [[ ) ]] ", i);
             if (processed_count) *processed_count = i - from + 1;
             return symbols_r;
         }
