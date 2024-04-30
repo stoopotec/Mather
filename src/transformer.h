@@ -96,8 +96,8 @@ struct equation get_equation_from_string(const char* string);
 struct equation  to_reverse_polish(struct equation eq);
 
 
-struct equation get_all_transformations_s(size_t* transformations, const char* string);
-struct equation get_all_transformations(size_t* transformations, struct equation* equation);
+struct equation* get_all_transformations_s(const char* string, size_t* transformations);
+struct equation* get_all_transformations(struct equation* equation, size_t* transformations);
 
 
 
