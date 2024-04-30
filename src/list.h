@@ -72,7 +72,7 @@
     if (list.length >= list.alloc_length) {\
         LIST_EXPAND_BY(list, APPEND_ALLOC_LENGTH, data_type)\
     }\
-    list.data[list.length++] = (x);\
+    list.data[list.length++] = x;\
 }
 
 #define LIST_APPEND_RANGE(x, x_length, list, data_type) if (x != NULL) {\
