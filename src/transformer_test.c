@@ -81,7 +81,6 @@ int main() {
 
         struct equation_tree tree = NULL_TREE;
         for (size_t i = eq_p.symbols.length - 1; i < eq_p.symbols.length; --i) {
-            printf("BT: adding symbol [%s]...\n", get_string_from_symbol(eq_p.symbols.data[i]));
             add_symbol_to_equation_tree(eq_p.symbols.data[i], &tree);
         }
 
