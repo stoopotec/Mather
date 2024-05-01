@@ -1,6 +1,6 @@
 
 :root {
-/*  change this for scaling  */
+  
   --m: 4rem;
   
   --red: #FF6565;
@@ -48,16 +48,19 @@ body {
   background: linear-gradient(90deg, var(--orange), var(--yellow), var(--green), var(--blue), var(--purple), var(--pink), var(--red));
   height: 100%;
   width: 100%;
+  border-radius: calc(0.7 * var(--m));
   position: absolute;
   bottom: 0%;
   z-index: -5;
   background-size: 200%;
   animation: animate 2s infinite linear;
-  filter: blur(calc(0.8 * var(--m)));
+  filter: blur(calc(0.2 * var(--m)));
+
+  transition: all 1s;
 }
 
-.fancy_button:hover, .fancy_button:hover::before {
-  animation: animate 0.2s infinite linear;
+.fancy_button:hover::before {
+  filter: blur(calc(1.5 * var(--m)));
 }
 
 @keyframes animate {

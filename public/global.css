@@ -1,100 +1,52 @@
 
-
-.footer {
-    position: relative;
-    width: 100%;
-    background: #3586ff;
-    min-height: 100px;
-    padding: 20px 50px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+.logo {
+  text-align: center;
 }
 
 
-.social-icon,
-.menu {
+
+.logo>img {
+  width: min(90%, 200px);
+  fill:red !important;
+  margin: 0 auto;
+  display: inline-block;
+}
+.logo {
+  text-align: center;
+}
+
+
+
+
+
+
+
+
+.toggle-switch {
+  width: 60px;
+  height: 30px;
+  background-color: #ccc;
+  border-radius: 15px;
+  margin-bottom: 100px;
   position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 10px 0;
-  flex-wrap: wrap;
+  cursor: pointer;
+
+  transition: background-color 0.25s ease-in-out;
 }
 
-.social-icon__item,
-.menu__item {
-  list-style: none;
-}
 
-.social-icon__link {
-  font-size: 2rem;
-  color: #fff;
-  margin: 0 10px;
-  display: inline-block;
-  transition: 0.5s;
-}
-.social-icon__link:hover {
-  transform: translateY(-10px);
-}
-
-.menu__link {
-  font-size: 1.2rem;
-  color: #fff;
-  margin: 0 10px;
-  display: inline-block;
-  transition: 0.5s;
-  text-decoration: none;
-  opacity: 0.75;
-  font-weight: 300;
-}
-
-.menu__link:hover {
-  opacity: 1;
-}
-
-.footer p {
-  color: #fff;
-  margin: 15px 0 10px 0;
-  font-size: 1rem;
-  font-weight: 300;
-}
-
-.wave {
+.toggle-switch-inner {
+  width: 20px;
+  height: 20px;
+  background-color: #fff;
+  border-radius: 50%;
   position: absolute;
-  top: -100px;
-  left: 0;
-  width: 100%;
-  height: 100px;
-  background: url("https://i.ibb.co/wQZVxxk/wave.png");
-  background-size: 1000px 100px;
+  top: 50%;
+  transform: translate(0, -50%);
+  transition: left 0.3s;
+  left: 5px;
 }
 
-.wave#wave1 {
-  z-index: 1000;
-  opacity: 1;
-  bottom: 0;
-  background-position-x: 000px;
-}
-
-.wave#wave2 {
-  z-index: 999;
-  opacity: 0.5;
-  bottom: 10px;
-  background-position-x: 500px;
-}
-
-.wave#wave3 {
-  z-index: 1000;
-  opacity: 0.2;
-  bottom: 15px;
-  background-position-x: 250px;
-}
-
-.wave#wave4 {
-  z-index: 999;
-  opacity: 0.7;
-  bottom: 20px;
-  background-position-x: 300px;
+.active-inner {
+  left: calc(100% - 25px);
 }
