@@ -200,12 +200,12 @@ struct equation get_equation_from_string(const char* string) {
     for (size_t i = 0; string[i] != '\0'; i += (spaces + word_length)) {
         struct symbol next_symbol = get_next_symbol(string + i, &spaces, &word_length);
 
-        printf("nextw symblol: %ld (%s), spaces: %ld, word_length: %ld\n", 
-            next_symbol.type, 
-            get_string_from_symbol_type(next_symbol.type), 
-            spaces, 
-            word_length
-        );
+        // printf("nextw symblol: %ld (%s), spaces: %ld, word_length: %ld\n", 
+        //     next_symbol.type, 
+        //     get_string_from_symbol_type(next_symbol.type), 
+        //     spaces, 
+        //     word_length
+        // );
 
         if (next_symbol.type) {
             LIST_APPEND(next_symbol, eq.symbols, struct symbol);
@@ -244,14 +244,14 @@ struct list_symbol_t braces_to_reverse_polish(const struct list_symbol_t symbols
     for (size_t i = from; i < symbols.length; ++i) {
         if (symbols.data[i].type & VARIABLE) { 
 
-            printf("RP: %3ld [[ %s ]] ", i, get_string_from_symbol(symbols.data[i]));
+            // printf("RP: %3ld [[ %s ]] ", i, get_string_from_symbol(symbols.data[i]));
             LIST_PUSH_AT(symbols.data[i], symbols_r, where_paste, symbol_t);
             where_paste = symbols_r.length;
-            PRINT_SYMBOL_LIST(symbols_r);
+            // PRINT_SYMBOL_LIST(symbols_r);
        
         } else if (symbols.data[i].type & ALGEBRAIC_OPERATOR) { 
 
-            printf("RP: %3ld [[ %s ]] ", i, get_string_from_symbol(symbols.data[i]));
+            // printf("RP: %3ld [[ %s ]] ", i, get_string_from_symbol(symbols.data[i]));
             LIST_APPEND(symbols.data[i], symbols_r, symbol_t);
             where_paste = symbols_r.length - 1; // useless
 
@@ -259,21 +259,21 @@ struct list_symbol_t braces_to_reverse_polish(const struct list_symbol_t symbols
             //     (symbols_r.data[symbols_r.length-2].type & ALGEBRAIC_OPERATOR) ? "true" : "false",
             //     (get_operation_proirity(symbols_r.data[symbols_r.length-2].type) < get_operation_proirity(symbols_r.data[symbols_r.length-1].type)) ? "true" : "false"
             // );
-            PRINT_SYMBOL_LIST(symbols_r);
+            // PRINT_SYMBOL_LIST(symbols_r);
             if ((symbols_r.data[symbols_r.length-2].type & ALGEBRAIC_OPERATOR) 
                 && (previous_braces_end < symbols_r.length-2)
                 && (get_operation_proirity(symbols_r.data[symbols_r.length-2].type) < get_operation_proirity(symbols_r.data[symbols_r.length-1].type))
             )
             {
-                printf("RP: %3ld %7s ", i, "SWAP!");
+                // printf("RP: %3ld %7s ", i, "SWAP!");
                 SWAP(symbols_r.data[symbols_r.length-1], symbols_r.data[symbols_r.length-2], symbol_t);
                 where_paste -= 1;
-                PRINT_SYMBOL_LIST(symbols_r);
+                // PRINT_SYMBOL_LIST(symbols_r);
             }
         
         } else if (symbols.data[i].type == BRACE_OPEN_ROUND) { 
 
-            printf("RP: %3ld [[ ( ]]\n", i);
+            // printf("RP: %3ld [[ ( ]]\n", i);
             size_t pc = 0;
             struct list_symbol_t braces_stuff = braces_to_reverse_polish(symbols, i+1, &pc);
             i += pc;
@@ -281,11 +281,11 @@ struct list_symbol_t braces_to_reverse_polish(const struct list_symbol_t symbols
             previous_braces_end = where_paste + braces_stuff.length - 1;
             LIST_FREE(braces_stuff);
             where_paste = symbols_r.length;
-            PRINT_SYMBOL_LIST(symbols_r);
+            // PRINT_SYMBOL_LIST(symbols_r);
        
         } else if (symbols.data[i].type == BRACE_CLOSE_ROUND) { 
 
-            printf("RP: %3ld [[ ) ]] ", i);
+            // printf("RP: %3ld [[ ) ]] ", i);
             if (processed_count) *processed_count = i - from + 1;
             return symbols_r;
         }
