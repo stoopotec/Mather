@@ -1,0 +1,102 @@
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'IBM Plex Sans';
+  font-weight: 400;
+}
+
+h2 {
+  font-family: 'IBM Plex Sans';
+  font-weight: 600;
+  margin: 0;
+}
+
+h3 {
+  font-family: 'IBM Plex Sans';
+  font-weight: 400;
+  margin: 0;
+}
+
+html {font-size: 100%;} /* 16px */
+
+h2 {font-size: 1.602rem; /* 25.6px */}
+
+h3 {font-size: 1.424rem; /* 22.72px */}
+
+body {
+  background-color: #0b0b0b;
+  color: #e5e5e5;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  height: 40rem;
+  width: 30rem;
+  position: relative;
+}
+
+.card > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  padding: 2rem;
+  width: 100%;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  padding: 0.8rem 1rem;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0.6rem;
+  cursor: pointer;
+  transition: all ease 0.3s;
+}
+
+#link1 {
+  background-color: white;
+  color: black;
+}
+
+#link2 {
+  background-color: #cf503a;
+}
+
+#link1:hover, #link2:hover {
+  background-color: #3a3ccf;
+  color: white;
+}
+
+
+
+.card::before {
+  content: '';
+  background-color: rgba(255,255,255,0.01);
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  backdrop-filter: blur(100px);
+  clip-path: polygon(evenodd, 
+    0 0, 
+    100% 0, 
+    100% 100%, 
+    0 100%, 
+    0 0, 0.3rem 0.3rem, calc(100% - 0.3rem) 0.3rem, calc(100% - 0.3rem) calc(100% - 0.3rem), 0.3rem calc(100% - 0.3rem), 0.3rem 0.3rem
+  )
+}
