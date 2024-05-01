@@ -112,7 +112,7 @@ int is_word_symbol(char c) {
     );
 }
 
-const char*     get_next_word(const char* string, size_t* spaces, size_t* word_len) {
+const char*     get_next_word(const char* string, size_t* spaces, size_t* word_len, enum symbol_type* type) {
 
     for (*spaces = 0; string[(*spaces)] != '\0'; ++(*spaces)) 
         if (
@@ -126,17 +126,14 @@ const char*     get_next_word(const char* string, size_t* spaces, size_t* word_l
 
     for (*word_len = 0; is_word_symbol(string[*word_len]); ++(*word_len)) {}
 
+    if (0 == *word_len) return NULL;
+    *type = VARIABLE;
     return string;
 
 }
 
 
-
-
-
-
-
-struct symbol   get_next_symbol(const char* string, size_t* spaces, size_t* text_len) {
+const char*     get_next_operator(const char* string, size_t* spaces, size_t* word_len, enum symbol_type* type) {
 
     for (*spaces = 0; string[(*spaces)] != '\0'; ++(*spaces)) 
         if (
@@ -148,23 +145,29 @@ struct symbol   get_next_symbol(const char* string, size_t* spaces, size_t* text
 
     for (size_t i = 0; i < LEN(symbols_table); ++i) {
         int accept = 1;
-        *text_len = 0;
+        *word_len = 0;
         for (size_t j = 0; symbols_table[i].key[j] != '\0'; ++j) {
             if (symbols_table[i].key[j] != string[j]) {
                 accept = 0;
                 break;
             }
-            if (symbols_table[i].key[j + 1] == '\0') *text_len = j + 1;
+            if (symbols_table[i].key[j + 1] == '\0') *word_len = j + 1;
         }
         if (accept) {
-            struct symbol symb = {
-                .type = symbols_table[i].value,
-                .text = string,
-                .text_len = *text_len,
-            };
-            return symb;
-        };
+            *type = symbols_table[i].value;
+            return string;
+        }
     }
+
+    return NULL;
+
+}
+
+
+
+
+struct symbol   get_next_symbol(const char* string, size_t* spaces, size_t* text_len) {
+
 
     struct symbol symb = {
         .type = NULL_SYMBOL,
@@ -173,17 +176,29 @@ struct symbol   get_next_symbol(const char* string, size_t* spaces, size_t* text
     };
 
 
-    size_t word_spaces = 0;
-    const char* nw = get_next_word(string, &word_spaces, text_len);
+    const char* nw;
+    enum symbol_type type;
+    
+    
+    nw = get_next_operator(string, spaces, text_len, &type);
 
-    if (*text_len != 0) {
+    if (nw != NULL) {
         symb.text = nw;
         symb.text_len = *text_len;
-        symb.type = VARIABLE;
-        *spaces = *spaces + word_spaces;
+        symb.type = type;
         return symb;
     }
 
+
+
+    nw = get_next_word(string, spaces, text_len, &type);
+
+    if (nw != NULL) {
+        symb.text = nw;
+        symb.text_len = *text_len;
+        symb.type = type;
+        return symb;
+    }
 
 
     return symb;
