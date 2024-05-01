@@ -345,7 +345,10 @@ unsigned char get_operator_arity(enum symbol_type oper) {
 void add_symbol_to_equation_tree(symbol_t symbol, struct equation_tree* tree) {
 
     if (tree->symbol.type == NULL_SYMBOL) {
-        // printf("BT: symbol [%s] add in label\n", get_string_from_symbol((struct symbol)symbol));
+        printf(
+            "BT: symbol [%s] add in label\n"
+            , get_string_from_symbol((struct symbol)symbol)
+        );
         tree->symbol = symbol;
         if (tree->symbol.type & VARIABLE) {
             tree->filled = 1;
@@ -356,39 +359,40 @@ void add_symbol_to_equation_tree(symbol_t symbol, struct equation_tree* tree) {
     }
 
     if (tree->symbol.type & VARIABLE) {
-        printf("BT: trying to add symbol to variable tree node (filled: %s)\n", tree->filled ? "true" : "false");
-        tree->filled = 1;
+        // printf(
+        //     "BT: trying to add symbol to variable tree node (filled: %s)\n"
+        //     , tree->filled ? "true" : "false"
+        // );
+        // tree->filled = 1;
         return;
     }
 
-    for (size_t i = 0; i < tree->sub_equations.alloc_length; ++i) {
+    for (size_t i = tree->sub_equations.alloc_length-1; i < tree->sub_equations.alloc_length; --i) {
         if (!tree->sub_equations.data[i].filled) {
+            printf(
+                "BT: nenene, symbol [%s] not filled yet.\n"
+                , get_string_from_symbol(tree->symbol)
+            );
             add_symbol_to_equation_tree(symbol, tree->sub_equations.data + i);
-            tree->sub_equations.length = i+1;
+            if (tree->sub_equations.data[i].filled)
+                tree->sub_equations.length = tree->sub_equations.alloc_length - i;
             goto check;
         }
     }
-    
-
-    // if (tree->sub_equations.length < get_operator_arity(symbol.type)) {
-    //     LIST_APPEND(null_tree, tree->sub_equations, struct equation_tree)
-    // }
-    // else 
     printf(
-        "BT: WARN! symbols in stack trace more than operator can handle!\n"
+        "BT: WARN! symbols in stack trace more than operator can handle!"
         "\tsymbol: [%s]\n"
         , get_string_from_symbol(tree->symbol)
-
     );
 
-    // tree->sub_equations.data[tree->sub_equations.length-1].symbol = symbol;
-    // if (tree->sub_equations.length >= get_operator_arity(symbol.type))
-    //     tree->filled = 1;
-    
 check:
 
-    if (tree->sub_equations.length < get_operator_arity(tree->symbol.type) && tree->filled)
-    printf("BT: hey! in fact you dont filled but you write so! symbol: [%s]\n", get_string_from_symbol(tree->symbol));
+    if (tree->sub_equations.length < get_operator_arity(tree->symbol.type) && tree->filled) {
+         printf(
+             "BT: hey! in fact you dont filled but you write so! symbol: [%s]\n",
+             get_string_from_symbol(tree->symbol)
+         );
+    }
     
     if (tree->sub_equations.length >= get_operator_arity(tree->symbol.type))
         tree->filled = 1;
