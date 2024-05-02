@@ -12,27 +12,44 @@
   --orange: #FF6D1B;
   
 }
+
+
+
 body {
-  background-color: #141516;
+  margin: 0;
+}
+
+.container {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  justify-content: space-between;
   height: 100vh;
-  margin: 0;
+  align-items: center;
+
+}
+
+.presentation {
+  /* background-color: var(--red); */
+  display: flex;
+
+  width: 300px;
+  justify-content:space-around;
+
+  padding-bottom: 20px;
 }
 
 .fancy_button {
   border: calc(0.08 * var(--m)) solid transparent;
   position: relative;
+  width: fit-content;
   color: #F3F3F3;
   font-size: var(--m);
   border-radius: calc(0.7 * var(--m));
   padding: calc(0.5 * var(--m)) calc(1 * var(--m));
-  display: flex;
-  justify-content: center;
+  margin-bottom: 10vh;
   cursor: pointer;
-  
+
+  background-color: #121213;
   background:
     linear-gradient(#121213, #121213), 
     /* linear-gradient(#121213 50%, rgba(18, 18, 19, 0.6) 80%, rgba(18, 18, 19, 0)),   */
@@ -50,13 +67,14 @@ body {
   width: 100%;
   border-radius: calc(0.7 * var(--m));
   position: absolute;
-  bottom: 0%;
+  top: 0%;
+  left: 0%;
   z-index: -5;
   background-size: 200%;
   animation: animate 2s infinite linear;
   filter: blur(calc(0.2 * var(--m)));
 
-  transition: all 1s;
+  transition: filter 2s ease-out;
 }
 
 .fancy_button:hover::before {
@@ -65,7 +83,7 @@ body {
 
 @keyframes animate {
   0% {background-position: 0%}
-  100% {background-position: 200%}
+  100% {background-position: -200%}
 }
 
 @media screen and (max-width: 1000px) {
