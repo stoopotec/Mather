@@ -46,14 +46,7 @@ int main() {
         printf("received: ");
 
         for (size_t i = 0; i < eq.symbols.length; ++i) {
-            if (eq.symbols.data[i].type != VARIABLE)
-                printf("%s ", get_string_from_symbol_type(eq.symbols.data[i].type));
-            else {
-                for (size_t j = 0; j < eq.symbols.data[i].text_len; ++j) {
-                    putchar(eq.symbols.data[i].text[j]);
-                }
-                putchar(' ');
-            }
+            printf("%s ", get_string_from_symbol(eq.symbols.data[i]));
         }
         printf("\n\n");
 
@@ -63,14 +56,7 @@ int main() {
         printf("to reverse polish: ");
 
         for (size_t i = 0; i < eq_p.symbols.length; ++i) {
-            if (eq_p.symbols.data[i].type != VARIABLE)
-                printf("%s ", get_string_from_symbol_type(eq_p.symbols.data[i].type));
-            else {
-                for (size_t j = 0; j < eq_p.symbols.data[i].text_len; ++j) {
-                    putchar(eq_p.symbols.data[i].text[j]);
-                }
-                putchar(' ');
-            }
+            printf("%s ", get_string_from_symbol(eq_p.symbols.data[i]));
         }
         printf("\n\n");
 
@@ -97,15 +83,8 @@ int main() {
 
         printf("transformations:\n");
         for (size_t i = 0; i < trans_len; ++i) {
-            for (size_t i = 0; i < transformations[i].symbols.length; ++i) {
-                if (transformations[i].symbols.data[i].type != VARIABLE)
-                    printf("%s ", get_string_from_symbol_type(transformations[i].symbols.data[i].type));
-                else {
-                    for (size_t j = 0; j < transformations[i].symbols.data[i].text_len; ++j) {
-                        putchar(transformations[i].symbols.data[i].text[j]);
-                    }
-                    putchar(' ');
-                }
+            for (size_t j = 0; j < transformations[i].symbols.length; ++j) {
+                printf("%s ", get_string_from_symbol(transformations[i].symbols.data[j]));
             }
             printf("\n");
         }

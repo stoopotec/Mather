@@ -73,7 +73,8 @@ const char* get_string_from_symbol_type(enum symbol_type type) {
         if (symbols_table[i].value == type) return symbols_table[i].key;
     }
     if (type == VARIABLE) return "VARIABLE";
-    return "NULL";
+    if (type == NUMBER) return "NUMBER";
+    return "NULL_TYPE";
 }
 
 char* soviet_union = NULL;
@@ -99,7 +100,7 @@ const char* get_string_from_symbol(struct symbol symbol) {
         soviet_union[symbol.text_len] = '\0';
         return soviet_union;
     }
-    return "NULL";
+    return "NULL_SYMBOL";
 }
 
 
@@ -390,7 +391,7 @@ check:
 }
 
 void print_equation_tree(struct equation_tree* tree, size_t zindex) {
-    for (size_t i = 0; i < zindex; ++i) putchar(' ');
+    for (size_t i = 0; i < zindex; ++i) printf("   ");
     printf("[%s]", get_string_from_symbol(tree->symbol));
     if (tree->sub_equations.length != (size_t)get_operator_arity(tree->symbol.type))
         printf(" (sub length: %ld, but would be %ld)",
