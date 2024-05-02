@@ -166,6 +166,42 @@ const char*     get_next_operator(const char* string, size_t* spaces, size_t* wo
 
 
 
+const char*     get_next_number(const char* string, size_t* spaces, size_t* word_len, enum symbol_type* type) {
+
+    for (*spaces = 0; string[(*spaces)] != '\0'; ++(*spaces)) 
+        if (
+            string[(*spaces)] !=  ' ' && 
+            string[(*spaces)] != '\t' && 
+            string[(*spaces)] != '\n' 
+        ) break;
+    string = string + *spaces;
+
+
+    int was_dot = 0;
+    for (*word_len = 0; string[*word_len] != '\0'; ++(*word_len)) {
+
+        if (string[(*word_len)] == '.') {
+            if (was_dot) break;
+            else {
+                was_dot = 1;
+                continue;
+            }
+        }
+
+        if (string[*word_len] < '0' || string[*word_len] > '9') break; 
+
+
+    }
+
+
+    if (0 == *word_len) return NULL;
+    *type = NUMBER;
+    return string;
+
+}
+
+
+
 
 struct symbol   get_next_symbol(const char* string, size_t* spaces, size_t* text_len) {
 
@@ -193,6 +229,17 @@ struct symbol   get_next_symbol(const char* string, size_t* spaces, size_t* text
 
 
     nw = get_next_word(string, spaces, text_len, &type);
+
+    if (nw != NULL) {
+        symb.text = nw;
+        symb.text_len = *text_len;
+        symb.type = type;
+        return symb;
+    }
+
+
+
+    nw = get_next_number(string, spaces, text_len, &type);
 
     if (nw != NULL) {
         symb.text = nw;
