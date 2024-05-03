@@ -31,11 +31,16 @@ body {
 .presentation {
   /* background-color: var(--red); */
   display: flex;
+  align-items: center;
 
-  width: 300px;
+  /* width: 300px; */
   justify-content:space-around;
 
-  padding-bottom: 20px;
+  padding: 20px;
+}
+
+.toggle-switch {
+  margin-right: 20px;
 }
 
 .fancy_button {
