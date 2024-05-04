@@ -1,10 +1,16 @@
 
 
+function has_value(arr, field_name, value) {
+    for (let i = 0; i < arr.length; ++i) {
+        if (arr[i][field_name] === value) return true;
+    }
+    return false;
+}
+
 const idle_state = {
     start: 0,
-    end: 100,
-
-    transition_gaps: [100], 
+    end: 0,
+ 
 
     change_to: [
         // { probability: 0.01, state: attention_1_state },
@@ -15,7 +21,6 @@ const attention_2_state = {
     start: 43,
     end: 56,
 
-    transition_gaps: [56],
 
     change_to: [
         // { probability: 0.5, state: idle_state },
@@ -26,10 +31,9 @@ const attention_1_state = {
     start: 24,
     end: 42,
 
-    transition_gaps: [42],
 
     change_to: [
-        { transition_gap: 42, probability: 0.4, state: attention_2_state, at_state_end_start_from: 42 },
+        { transition_gap: 42, probability: 1, state: attention_2_state, at_state_end_start_from: 42 },
     ],
 }
 
@@ -43,38 +47,47 @@ class Clippy {
 
     static nextFrame() {
         this.animation_index += 1;
-        if (this.current_state.transition_gaps.includes(this.animation_index)) {
-            if (this.state_queue > 0) {
-                this.current_state = this.state_queue.shift();
-                this.animation_index = this.current_state.start;
+        
+
+
+        for (let i = 0; i < this.current_state.change_to.length; ++i) if (this.current_state.change_to[i].transition_gap === this.animation_index) {
+
+            if (this.current_state.change_to[i].probability >= 1 || 
+                (Math.random() < this.current_state.change_to[i].probability &&
+                this.state_queue.length == 0)
+            ) {
+                this.addStateUnshift(this.current_state, this.current_state.change_to[i].at_state_end_start_from);
+                this.setState(this.current_state.change_to[i].state);
+                console.log(this.animation_index, this.state_queue.length, this.current_state.start);
                 return;
-            }
-            if (this.current_state.change_to.length > 0) {
-                for (let i = 0; i < this.current_state.change_to.length; ++i) {
-                    if (Math.random() < this.current_state.change_to[i].probability) {
-                        this.state_queue.unshift(this.current_state);
-                        this.current_state = this.current_state.change_to[i].state;
-                        this.animation_index = this.current_state.start;
-                        return;
-                    }
-                }
             }
         }
 
         if (this.animation_index > this.current_state.end) {
             if (this.state_queue.length > 0) {
-                this.current_state = this.state_queue.shift();
-                this.animation_index = this.current_state.start;
+                let qe = this.state_queue.shift();
+                this.setState(qe.state, qe.start);
+                console.log(this.animation_index, this.state_queue.length, this.current_state.start);
                 return;
             }
             else {
                 this.animation_index = this.current_state.start;
             }
         }
+
+        console.log(this.animation_index, this.state_queue.length, this.current_state.start);
     }
 
-    static setState(state) {
-        this.state_queue.push(state);
+    static setState(state, start = undefined) {
+        this.state = state;
+        this.animation_index = (typeof start === "number") ? start : state.start;
+    }
+
+    static addStateUnshift(state, start = undefined) {
+        this.state_queue.unshift({state: state, start: (typeof start === "number") ? start : state.start});
+    }
+    static addState(state, start = undefined) {
+        this.state_queue.push({state: state, start: (typeof start === "number") ? start : state.start});
     }
 
 
@@ -114,7 +127,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         console.log("clippy:", clippy_w, clippy_h, clippy_aspect);
 
-        return setInterval(clippy_draw, 80);
+        return setInterval(clippy_draw, 200);
 
     };
 
@@ -125,7 +138,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function clippy_draw() {
 
-    Clippy.nextFrame();
+    
 
     clippy_canvas_ctx.clearRect(0, 0, clippy_canvas.width, clippy_canvas.height);
 
@@ -133,7 +146,8 @@ function clippy_draw() {
         clippy_spritesheet, 
         clippy_w * (Clippy.animation_index % clippy_count_x),
         clippy_h * (Math.floor(Clippy.animation_index / clippy_count_x) % clippy_count_y),
-        clippy_w, clippy_h, 0, 0, clippy_canvas.width, clippy_canvas.height);
+        clippy_w, clippy_h, 0, 0, clippy_canvas.width, clippy_canvas.height
+    );
 
-
+    Clippy.nextFrame();
 } 
