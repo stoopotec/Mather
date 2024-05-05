@@ -422,6 +422,62 @@ struct equation  to_infix_notation(struct equation reverse_polish) {
 }
 
 
+double do_algebra(double n1, double n2, enum symbol_type operator) {
+    switch (operator) {
+        case PLUS:
+            return n1 + n2;
+            break;
+        case MINUS:
+            return n1 - n2;
+            break;
+
+        case MULTIPLY:
+            return n1 * n2;
+            break;
+        case DIVIDE:
+            return n1 / n2;
+            break;
+    }
+    return 0;
+}
+
+double compute(struct equation* postfix) {
+
+    LIST(double) number_stack = {0};
+
+    for (size_t i = 0; i < postfix->symbols.length; ++i) {
+        if (postfix->symbols.data[i].type & ALGEBRAIC_OPERATOR) {
+            number_stack.data[number_stack.length-2] = do_algebra(number_stack.data[number_stack.length-2], number_stack.data[number_stack.length-1], postfix->symbols.data[i].type);
+            number_stack.length -= 1;
+        } else {
+            double number;
+            char* number_str = calloc(postfix->symbols.data[i].text_len+1, sizeof(*number_str));
+            strcpy(number_str, postfix->symbols.data[i].text);
+            number = atof(number_str);
+            free(number_str);
+            LIST_APPEND(number, number_stack, double);
+        }
+    }
+
+    return number_stack.data[0];
+
+}
+
+int computable(struct equation* postfix, double* solution) {
+
+    for (size_t i = 0; i < postfix->symbols.length; ++i) {
+        if (!(
+            (postfix->symbols.data[i].type & ALGEBRAIC_OPERATOR) ||
+            (postfix->symbols.data[i].type & NUMBER)
+        )) return 0;
+    }
+
+    *solution = compute(postfix);
+    return 1;
+
+}
+
+
 
 
 const struct equation_tree null_tree = NULL_TREE;

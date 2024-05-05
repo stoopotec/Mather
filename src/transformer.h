@@ -101,6 +101,8 @@ struct equation  to_postfix_notation(struct equation eq);
 struct equation  to_infix_notation(struct equation reverse_polish);
 
 
+int computable(struct equation* postfix, double* solution);
+
 
 struct equation* get_all_transformations_s(const char* string, size_t* transformations, struct equation* permutations, size_t permutations_len);
 struct equation* get_all_transformations(struct equation* equation, size_t* transformations, struct equation* permutations, size_t permutations_len);
