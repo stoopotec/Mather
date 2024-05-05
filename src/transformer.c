@@ -422,8 +422,8 @@ struct equation  to_infix_notation(struct equation reverse_polish) {
 }
 
 
-double do_algebra(double n1, double n2, enum symbol_type operator) {
-    switch (operator) {
+double do_algebra(double n1, double n2, enum symbol_type oper) {
+    switch (oper) {
         case PLUS:
             return n1 + n2;
             break;
@@ -437,6 +437,9 @@ double do_algebra(double n1, double n2, enum symbol_type operator) {
         case DIVIDE:
             return n1 / n2;
             break;
+        
+        default:
+            return 0;
     }
     return 0;
 }
@@ -451,7 +454,7 @@ double compute(struct equation* postfix) {
             number_stack.length -= 1;
         } else {
             double number;
-            char* number_str = calloc(postfix->symbols.data[i].text_len+1, sizeof(*number_str));
+            char* number_str = (char*)calloc(postfix->symbols.data[i].text_len+1, sizeof(*number_str));
             strcpy(number_str, postfix->symbols.data[i].text);
             number = atof(number_str);
             free(number_str);

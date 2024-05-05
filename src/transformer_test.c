@@ -91,6 +91,11 @@ int main() {
         printf("\n\n");
 
 
+        double result;
+        if (computable(&eq_p, &result))
+            printf("solution: %lf\n\n", result);
+
+
 
         struct equation eq_np = to_infix_notation(eq_p);
 
