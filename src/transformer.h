@@ -32,6 +32,8 @@ enum symbol_type {
 
 
 
+    OPERAND                     = 0b0000100000000000000000000000000000000000000000000000000000000001,
+
     VARIABLE                    = 0b0000100000000000000000000000000000000000000000000000000000000000,
     NUMBER                      = 0b0000100000000000000000000000000000000000000000000000000000000001,
 
@@ -95,11 +97,13 @@ struct symbol   get_next_symbol(const char* string, size_t* spaces, size_t* text
 struct equation get_equation_from_string(const char* string);
 
 
-struct equation  to_reverse_polish(struct equation eq);
+struct equation  to_postfix_notation(struct equation eq);
+struct equation  to_infix_notation(struct equation reverse_polish);
 
 
-struct equation* get_all_transformations_s(const char* string, size_t* transformations);
-struct equation* get_all_transformations(struct equation* equation, size_t* transformations);
+
+struct equation* get_all_transformations_s(const char* string, size_t* transformations, struct equation* permutations, size_t permutations_len);
+struct equation* get_all_transformations(struct equation* equation, size_t* transformations, struct equation* permutations, size_t permutations_len);
 
 
 

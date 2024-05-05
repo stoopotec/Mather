@@ -358,7 +358,7 @@ struct list_symbol_t braces_to_reverse_polish(const struct list_symbol_t symbols
 
 }
 
-struct equation  to_reverse_polish(struct equation eq) {
+struct equation  to_postfix_notation(struct equation eq) {
 
     struct equation eq_r = {.symbols = braces_to_reverse_polish(eq.symbols, 0, NULL)};  
     return eq_r;
@@ -366,26 +366,83 @@ struct equation  to_reverse_polish(struct equation eq) {
 }
 
 
+struct equation  to_infix_notation(struct equation reverse_polish) {
+    // a b + c - g *
+    //
+    // ( ( ( a + b ) - c ) * g )
+
+    // a b c + *
+    // ( b + c ) * c
+
+    symbol_t brace_open = {
+        .type = BRACE_OPEN_ROUND,
+        .text = "(",
+        .text_len = 1,
+    };
+
+    symbol_t brace_close = {
+        .type = BRACE_CLOSE_ROUND,
+        .text = ")",
+        .text_len = 1,
+    };
+
+
+    struct equation norm_r = {0};
+
+    LIST(symbol_t) symbol_stack = {0};
+
+    for (size_t i = 0; i < reverse_polish.symbols.length; ++i) {
+        if (reverse_polish.symbols.data[i].type & OPERAND) {
+            LIST_APPEND(reverse_polish.symbols.data[i], symbol_stack, symbol_t);
+        } else {
+            if (norm_r.symbols.length > 0) {
+                LIST_PUSH_AT(brace_open, norm_r.symbols, 0, symbol_t);
+                LIST_APPEND(brace_close, norm_r.symbols, symbol_t);
+            }
+            
+            size_t push_at = norm_r.symbols.length;
+
+            if (symbol_stack.length > 0) {
+                LIST_PUSH_AT(symbol_stack.data[symbol_stack.length-1], norm_r.symbols, push_at, symbol_t);
+                symbol_stack.length -= 1;
+            }
+
+            LIST_PUSH_AT(reverse_polish.symbols.data[i], norm_r.symbols, push_at, symbol_t);
+
+            if (symbol_stack.length > 0) {
+                LIST_PUSH_AT(symbol_stack.data[symbol_stack.length-1], norm_r.symbols, push_at, symbol_t);
+                symbol_stack.length -= 1;
+            }
+
+
+        }
+    }
+
+    return norm_r;
+}
+
 
 
 
 const struct equation_tree null_tree = NULL_TREE;
 
-struct equation* get_all_transformations_s(const char* string, size_t* transformations) {
+struct equation* get_all_transformations_s(const char* string, size_t* transformations, struct equation* permutations, size_t permutations_len) {
     struct equation eq = get_equation_from_string(string);
-    struct equation* r = get_all_transformations(&eq, transformations);
+    struct equation* r = get_all_transformations(&eq, transformations, permutations, permutations_len);
     LIST_FREE(eq.symbols);
     return r;
 }
 
-struct equation* get_all_transformations(struct equation* equation, size_t* transformations) {
+
+
+struct equation* get_all_transformations(struct equation* equation, size_t* transformations, struct equation* permutations, size_t permutations_len) {
 
     LIST(equation_t) equations_r = {0};
 
 
     struct equation_tree eq_tree = null_tree;
     for (size_t i = equation->symbols.length-1; i < equation->symbols.length; --i) {
-
+        add_symbol_to_equation_tree(equation->symbols.data[i], &eq_tree);
     }
 
 

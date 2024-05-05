@@ -97,7 +97,7 @@
     }\
     if (index < list.length) {\
         LIST_APPEND(list.data[list.length - 1], list, data_type)\
-        for (int i = list.length-2; i >= index; --i)\
+        for (int i = list.length-2; i >= index && i < list.length; --i)\
             list.data[i+1] = list.data[i];\
         list.data[index] = x;\
     }\

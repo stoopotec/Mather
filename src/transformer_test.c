@@ -4,6 +4,8 @@
 #include "list.h"
 
 
+#define ARR_LEN(x) (sizeof(x) / sizeof(*(x)))
+
 int main() {
 
 
@@ -26,6 +28,32 @@ int main() {
 
     // return 0;
 
+    // printf("computing standart permutations... ");
+
+    // struct equation permuts[] = {
+    //     get_equation_from_string("a + b \\eq b + a"),
+    //     get_equation_from_string("a + (b + c) \\eq (a + b) + c"),
+
+    //     get_equation_from_string("a + 0 \\eq a"),
+    //     get_equation_from_string("a + (-a) \\eq 0"),
+
+    //     get_equation_from_string("a * b \\eq b * a"),
+    //     get_equation_from_string("a * (b * c) \\eq (a * b) * c"),
+    //     get_equation_from_string("1 * a \\eq a"),
+    //     get_equation_from_string("a * (1/a) \\eq 1"),
+    //     get_equation_from_string("(a + b) * c \\eq a * c + b * c"),
+
+    //     // get_equation_from_string("a = b"),
+    //     // get_equation_from_string("a \leq c"),
+    //     // get_equation_from_string("a + c \leq b + c"),
+    //     // get_equation_from_string("0 \leq a * b"),
+    //     // get_equation_from_string("a < b"),
+    //     // get_equation_from_string("b \geq a"),
+    //     // get_equation_from_string("a > b"),
+
+    //     // get_equation_from_string("\exists c \in \mathbb{R} | a \leq c \land c \leq b"),
+    // };
+    // printf("done.\n");
 
 
     
@@ -33,9 +61,11 @@ int main() {
 
     while (1) {
 
-        printf("plasew entr a textuwu\n");
+        printf("your equation\n> ");
 
         fgets(buffer, sizeof(buffer), stdin);
+
+        printf("\n\n");
 
         // size_t transformations;
 
@@ -51,9 +81,9 @@ int main() {
         printf("\n\n");
 
 
-        struct equation eq_p = to_reverse_polish(eq);
+        struct equation eq_p = to_postfix_notation(eq);
         
-        printf("to reverse polish: ");
+        printf("to reverse polish from normal: ");
 
         for (size_t i = 0; i < eq_p.symbols.length; ++i) {
             printf("%s ", get_string_from_symbol(eq_p.symbols.data[i]));
@@ -62,8 +92,19 @@ int main() {
 
 
 
+        struct equation eq_np = to_infix_notation(eq_p);
 
-        printf("equation tree: \n");
+        printf("to normal from reverse polish: ");
+
+        for (size_t i = 0; i < eq_np.symbols.length; ++i) {
+            printf("%s ", get_string_from_symbol(eq_np.symbols.data[i]));
+        }
+        printf("\n\n");
+
+
+
+
+        printf("equation tree from reverse polish: \n");
 
         struct equation_tree tree = NULL_TREE;
         for (size_t i = eq_p.symbols.length - 1; i < eq_p.symbols.length; --i) {
@@ -78,16 +119,16 @@ int main() {
 
 
 
-        size_t trans_len = 0;
-        struct equation* transformations = get_all_transformations(&eq, &trans_len);
+        // size_t trans_len = 0;
+        // struct equation* transformations = get_all_transformations(&eq, &trans_len, permuts, ARR_LEN(permuts));
 
-        printf("transformations:\n");
-        for (size_t i = 0; i < trans_len; ++i) {
-            for (size_t j = 0; j < transformations[i].symbols.length; ++j) {
-                printf("%s ", get_string_from_symbol(transformations[i].symbols.data[j]));
-            }
-            printf("\n");
-        }
+        // printf("transformations:\n");
+        // for (size_t i = 0; i < trans_len; ++i) {
+        //     for (size_t j = 0; j < transformations[i].symbols.length; ++j) {
+        //         printf("%s ", get_string_from_symbol(transformations[i].symbols.data[j]));
+        //     }
+        //     printf("\n");
+        // }
 
 
 
