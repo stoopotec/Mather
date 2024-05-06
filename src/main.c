@@ -20,7 +20,7 @@
 
 int socketfd;
 
-void close_socket(int integer) {
+void inter(int integer) {
     close(socketfd);
     exit(EXIT_SUCCESS);
 }
@@ -34,7 +34,7 @@ int main() {
     }
 
 
-    signal(SIGINT , (__sighandler_t)&close_socket);
+    signal(SIGINT , (__sighandler_t)&inter);
 
 
     struct sockaddr_in addr_in;

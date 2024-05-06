@@ -6,6 +6,8 @@
 #include "messages.h"
 
 
+const char* define_content_type(const char* filename);
+
 
 int send_small_file(int socketfd, const char* filename) {
     if (filename == NULL) {

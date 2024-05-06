@@ -1,11 +1,13 @@
 #include "server.h"
 #include "internet.h"
 #include "messages.h"
+#include "list.h"
+#include "http.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 
-
+#include "transformer.h"
 
 
 long find(const char* from, const char* what) {
@@ -20,21 +22,6 @@ long find(const char* from, const char* what) {
         if (correct) return i;
     }
     return -1l;
-}
-
-char* whatFileWant(char* http_header) {
-    long from, to;
-    // if ((from = find(http_header, "GET /")) == -1) return NULL;
-    from = 4;
-
-    if ((to = find(http_header + from, " ")) == -1) return NULL;
-    to += from;
-
-
-    char* filename = (char*)malloc((to - from + 1) * sizeof(*filename));
-    filename[0] = '.';
-    strncpy(filename + 1, http_header + from, to - from);
-    return filename;
 }
 
 
@@ -60,20 +47,79 @@ int serve_client(int socketfd) {
     printf(E_RESET);
 
 
-    char* filename;
-    if ((filename = whatFileWant(buffer)) == NULL) {
-        printf(ERR "клиент прислал несуразную чушь!\n");
-        close(socketfd);
-        printf(INFO "session end\n\n");
-        return -1;
-    }
-    free(buffer);
+    printf(INFO "i receive:\n");
 
-    printf(INFO "i think client want file " E_ITALIC "%s" E_RESET ", конечно мы ему дадим то, что он хочет)))\n", filename);
+    char* url = get_url_alloc(buffer);
 
-    send_small_file(socketfd, filename);
-    free(filename);
+    printf("\turl: %s\n", url);
+
+    char* filename = get_path_alloc(url, ".");
     
+    printf("\tpath: %s\n", filename);
+
+    list_url_arg_t args = get_url_args(url);
+
+    printf("\targs: %s\n", (args.length == 0) ? "(args.length == 0)" : "");
+
+    for (size_t i = 0; i < args.length; ++i) {
+        printf("\t\t\'");
+
+        for (size_t j = 0; j < args.data[i].key_len; ++j) putchar(args.data[i].key[j]);
+        
+        printf("\': \'");
+
+        for (size_t j = 0; j < args.data[i].val_len; ++j) putchar(args.data[i].val[j]);
+        
+        printf("\'\n");
+    }
+
+
+    enum METHOD_E method = get_method(buffer);
+
+    printf("\tmethod: %d\n", method);
+
+
+    if (method == GET) {
+
+        printf(INFO "i think client wants file on disk " E_ITALIC "%s" E_RESET "\n", filename);
+
+        send_small_file(socketfd, filename);
+        
+
+    } else if (method == CALC) {
+
+        char* equation = buffer+2;
+        for (; *equation != '\0' && (*(equation-1) != '\n') && *(equation-2) != '\n'; ++equation) {}
+
+        printf(INFO "client wants to calculate this silly equation " E_ITALIC "%s " E_RESET "\n", equation);
+
+        printf(WARN "BUT I CANNOT DO IT!! (sending 501 Not Implemented)\n");
+        const char* resp = 
+            "HTTP/1.1 501 Not Implemented\n"
+            "Server: Prikol\n"
+            "Connection: Close\n"
+            "\n"
+            "\n";
+        send(socketfd, resp, sizeof(resp), 0);
+
+
+    } else {
+
+        printf(WARN "клиенты они такие.. умные. он короче прислал какую-то гадость, отправлю ему сообщение о server error, чтобы не подумал вдруг что это он дебил, а то подаст ещё в суд на эту программу, оно мне надо?\n");
+        const char* resp = 
+        "HTTP/1.1 501 Not Implemented\n"
+        "Server: Prikol\n"
+        "Connection: Close\n"
+        "\n"
+        "\n";
+        send(socketfd, resp, sizeof(resp), 0);
+
+    }
+    
+    free(url);
+    free(filename);
+    LIST_FREE(args);
+    free(buffer);
     close(socketfd);
     printf(INFO "session end\n\n");
 
