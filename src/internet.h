@@ -15,6 +15,10 @@
 
 struct sockaddr create_sockaddr(socklen_t* lengthr, uint16_t port);
 
-
-
 int create_server_socket(struct sockaddr* address);
+
+
+long find(const char* from, const char* what);
+char* whatFileWant(char* http_header);
+
+const char* define_content_type(const char* filename);
