@@ -9,21 +9,21 @@
 
 int send_small_file(int socketfd, const char* filename) {
     if (filename == NULL) {
-        printf(ERR"cannot send file. "E_ITALIC TOSTRING(filename) E_RESET" in NULL\n");
+        printf(ERR "cannot send file. " E_ITALIC TOSTRING(filename) E_RESET" in NULL\n");
         return EXIT_FAILURE;
     }
     if (socketfd <= 0) {
-        printf(ERR"cannot send file "E_ITALIC"%s"E_RESET"\n becaurse of corrupted socketfd\n", filename);
+        printf(ERR "cannot send file " E_ITALIC "%s" E_RESET "\n becaurse of corrupted socketfd\n", filename);
         return EXIT_FAILURE;
     }
 
 
-    printf(INFO"downloading "E_ITALIC"%s"E_RESET" in memory\n", filename);
+    printf(INFO "downloading " E_ITALIC "%s" E_RESET " in memory\n", filename);
 
 
     FILE* file = fopen(filename, "rb");
     if (file == NULL) {
-        printf(WARN"File "E_ITALIC"%s"E_RESET" could not open, sending 404 response\n", filename);
+        printf(WARN "File " E_ITALIC "%s" E_RESET " could not open, sending 404 response\n", filename);
         const char* resp = 
         "HTTP/1.1 404 NOt Found\n"
         "Server: Prikol\n"
@@ -54,7 +54,7 @@ int send_small_file(int socketfd, const char* filename) {
 
     const char* content_type = define_content_type(filename);
 
-    printf(INFO"i think \e[3m" TOSTRING(content_type) "\e[0m is %s\n", content_type);
+    printf(INFO "i think " E_ITALIC TOSTRING(content_type) E_RESET " is %s\n", content_type);
 
 
     char* response = (char*)malloc((content_length + 2048) * sizeof(*response));
@@ -69,9 +69,9 @@ int send_small_file(int socketfd, const char* filename) {
         "%s", content_type, content_length, content
     );
 
-    printf(INFO"response is ready\n");
+    printf(INFO "response is ready\n");
     
-    printf(E_RESET INFO"sending...\n");
+    printf(E_RESET INFO "sending...\n");
 
     return send(socketfd, response, response_len, 0);
 

@@ -44,17 +44,17 @@ int serve_client(int socketfd) {
 
     if (-1 == socketfd) return -1;
 
-    printf(INFO"new connection\n");
+    printf(INFO "new connection\n");
 
 
     size_t buffer_length;
     char* buffer = read_all_alloc(&buffer_length, socketfd);
     if (buffer == NULL) {
-        fprintf(stderr, ERR"buffer is NULL\n");
+        fprintf(stderr, ERR "buffer is NULL\n");
         exit(EXIT_FAILURE);
     }
 
-    printf(E_BOLD"received:"E_RESET"\n");
+    printf(E_BOLD "received:" E_RESET "\n");
     printf(E_ITALIC);
     for (size_t i = 0; i < buffer_length; ++i) { putchar(buffer[i]); }
     printf(E_RESET);
@@ -62,20 +62,20 @@ int serve_client(int socketfd) {
 
     char* filename;
     if ((filename = whatFileWant(buffer)) == NULL) {
-        printf(ERR"клиент прислал несуразную чушь!\n");
+        printf(ERR "клиент прислал несуразную чушь!\n");
         close(socketfd);
-        printf(INFO"session end\n\n");
+        printf(INFO "session end\n\n");
         return -1;
     }
     free(buffer);
 
-    printf(INFO"i think client want file "E_ITALIC"%s"E_RESET", конечно мы ему дадим то, что он хочет)))\n", filename);
+    printf(INFO "i think client want file " E_ITALIC "%s" E_RESET ", конечно мы ему дадим то, что он хочет)))\n", filename);
 
     send_small_file(socketfd, filename);
     free(filename);
     
     close(socketfd);
-    printf(INFO"session end\n\n");
+    printf(INFO "session end\n\n");
 
     return 0;
 

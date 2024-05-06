@@ -29,7 +29,7 @@ void close_socket(int integer) {
 int main() {
     socketfd = socket(AF_INET, SOCK_STREAM, 0);
     if (-1 == socketfd) {
-        fprintf(stderr, ERR"cannot create socket\n");
+        fprintf(stderr, ERR "cannot create socket\n");
         exit(EXIT_FAILURE);
     }
 
@@ -45,16 +45,16 @@ int main() {
 
 
     if (-1 == bind(socketfd, (struct sockaddr*)&addr_in, sizeof(addr_in))) {
-        fprintf(stderr, ERR"cannot bind\n");
+        fprintf(stderr, ERR "cannot bind\n");
         exit(EXIT_FAILURE);
     }
 
     if (-1 == listen(socketfd, 10)) {
-        fprintf(stderr, ERR"cannot listen\n");
+        fprintf(stderr, ERR "cannot listen\n");
         exit(EXIT_FAILURE);
     }
 
-    printf(INFO"server running! you can get acsex it by http://localhost:%d/index.html\n", PORT);
+    printf(INFO "server running! localhost: " E_ITALIC E_UNDERLINE "http://localhost:%d/index.html" E_RESET "\n", PORT);
 
     while (1)
         serve_client(accept(socketfd, NULL, NULL));
