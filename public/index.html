@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="shortcut icon" href="favicon.png" type="image/x-icon">
+
+    <title>Mather</title>
+
+    <script type="text/javascript"
+      src="http://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+
+    <script src="engine.js"></script>
+    <link rel="stylesheet" href="menu.css">
+    <link rel="stylesheet" href="global.css">
+
+</head>
+<body>
+
+    <div class="logo"><img src="logo.svg"></div>
+
+    <div class="container">
+      <div class="input-container">
+
+
+        <textarea name="equation" id="equation" placeholder="put your equation here">2 + x / 2 = x</textarea>
+        <button onclick="produceTransitions()">produce</button>
+
+
+        <script src="transitions.js"></script>
+
+      </div>
+
+
+
+      <div class="transitions-container">
+
+
+        
+        
+      </div>
+
+      <template class="transition">
+        <div class="transition-container">
+          <p>Transition:</p>
+          <p id="transition-content"></p>
+        <div class="possible"></div>
+      </template>
+          
+
+    </div>
+
+</body>
+</html>

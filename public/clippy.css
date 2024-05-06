@@ -1,0 +1,12 @@
+
+
+
+#clippy {
+    width: calc(30vw * 1.33333);
+    height: 30vw;
+    /* border: 5px dashed red; */
+    background-color: transparent;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}

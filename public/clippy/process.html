@@ -1,0 +1,51 @@
+ 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Color Replace Tool</title>
+<script>
+  function replaceColor() {
+    var fileInput = document.getElementById('fileInput');
+    var canvas = document.getElementById('canvas');
+    var ctx = canvas.getContext('2d');
+
+    var img = new Image();
+    img.onload = function() {
+      canvas.width = img.width;
+      canvas.height = img.height;
+      ctx.drawImage(img, 0, 0);
+
+      var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      var data = imageData.data;
+
+      for(var i = 0; i < data.length; i += 4) {
+        if(data[i    ] >= 250 && 
+           data[i + 1] <= 5   && 
+           data[i + 2] >= 250 && 
+           data[i + 3] === 255) 
+        {
+          data[i] = 0;
+          data[i + 1] = 0;
+          data[i + 2] = 0;
+          data[i + 3] = 0;
+        }
+      }
+      ctx.putImageData(imageData, 0, 0);
+      var dataURL = canvas.toDataURL('image/png');
+      var link = document.createElement('a');
+      link.download = 'processed_image.png';
+      link.href = dataURL;
+      link.click();
+    };
+    img.src = URL.createObjectURL(fileInput.files[0]);
+  }
+</script>
+</head>
+<body>
+  <input type="file" id="fileInput" accept="image/png">
+  <button onclick="replaceColor()">Replace Color and Download</button>
+  <br>
+  <canvas id="canvas" style="display:none;"></canvas>
+</body>
+</html>

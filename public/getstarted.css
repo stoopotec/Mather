@@ -1,0 +1,98 @@
+
+:root {
+  
+  --m: 4rem;
+  
+  --red: #FF6565;
+  --pink: #FF64F9;
+  --purple: #6B5FFF;
+  --blue: #4D8AFF;
+  --green: #5BFF89;
+  --yellow: #FFEE55;
+  --orange: #FF6D1B;
+  
+}
+
+
+
+body {
+  margin: 0;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100vh;
+  align-items: center;
+
+}
+
+.presentation {
+  /* background-color: var(--red); */
+  display: flex;
+  align-items: center;
+
+  /* width: 300px; */
+  justify-content:space-around;
+
+  padding: 20px;
+}
+
+.toggle-switch {
+  margin-right: 20px;
+}
+
+.fancy_button {
+  border: calc(0.08 * var(--m)) solid transparent;
+  position: relative;
+  width: fit-content;
+  color: #F3F3F3;
+  font-size: var(--m);
+  border-radius: calc(0.7 * var(--m));
+  padding: calc(0.5 * var(--m)) calc(1 * var(--m));
+  margin-bottom: 10vh;
+  cursor: pointer;
+
+  background-color: #121213;
+  background:
+    linear-gradient(#121213, #121213), 
+    /* linear-gradient(#121213 50%, rgba(18, 18, 19, 0.6) 80%, rgba(18, 18, 19, 0)),   */
+    linear-gradient(90deg, var(--orange), var(--yellow), var(--green), var(--blue), var(--purple), var(--pink), var(--red));
+  background-origin: border-box;
+  background-clip: padding-box, border-box, border-box;
+  background-size: 200%;
+  animation: animate 2s infinite linear;
+}
+
+.fancy_button::before {
+  content: '';
+  background: linear-gradient(90deg, var(--orange), var(--yellow), var(--green), var(--blue), var(--purple), var(--pink), var(--red));
+  height: 100%;
+  width: 100%;
+  border-radius: calc(0.7 * var(--m));
+  position: absolute;
+  top: 0%;
+  left: 0%;
+  z-index: -5;
+  background-size: 200%;
+  animation: animate 2s infinite linear;
+  filter: blur(calc(0.2 * var(--m)));
+
+  transition: filter 2s ease-out;
+}
+
+.fancy_button:hover::before {
+  filter: blur(calc(1.5 * var(--m)));
+}
+
+@keyframes animate {
+  0% {background-position: 0%}
+  100% {background-position: -200%}
+}
+
+@media screen and (max-width: 1000px) {
+  :root {
+    --m: 2rem;
+  }
+}
