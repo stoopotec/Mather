@@ -485,28 +485,45 @@ int computable(struct equation* postfix, double* solution) {
 
 const struct equation_tree null_tree = NULL_TREE;
 
-struct equation* get_all_transformations_s(const char* string, size_t* transformations, struct equation* permutations, size_t permutations_len) {
+list_transformation_t get_all_transformations_s(const char* string) {
     struct equation eq = get_equation_from_string(string);
-    struct equation* r = get_all_transformations(&eq, transformations, permutations, permutations_len);
+    list_transformation_t r = get_all_transformations(&eq);
     LIST_FREE(eq.symbols);
     return r;
 }
 
 
 
-struct equation* get_all_transformations(struct equation* equation, size_t* transformations, struct equation* permutations, size_t permutations_len) {
+list_transformation_t get_all_transformations(struct equation* equation) {
 
-    LIST(equation_t) equations_r = {0};
+    list_transformation_t transformations = {0};
 
+    struct equation postfix = to_postfix_notation(*equation);
 
-    struct equation_tree eq_tree = null_tree;
-    for (size_t i = equation->symbols.length-1; i < equation->symbols.length; --i) {
-        add_symbol_to_equation_tree(equation->symbols.data[i], &eq_tree);
+    double solution;
+    if (computable(&postfix, &solution)) {
+        struct equation solution_equation = {0};
+        struct symbol solution_symbol = {
+            .text = (char*)malloc(20), // omg
+            .text_len = 20,
+            .type = NUMBER,
+        };
+        solution_symbol.text_len = snprintf(solution_symbol.text, 20, "%lf", solution);
+        LIST_APPEND(solution_symbol, solution_equation.symbols, symbol_t);
+        transformation_t solution_transformation = {
+            .equation = solution_equation,
+            .comment = "solve the problem",
+        };
+        LIST_APPEND(solution_transformation, transformations, transformation_t);
     }
 
+    // struct equation_tree eq_tree = null_tree;
+    // for (size_t i = equation->symbols.length-1; i < equation->symbols.length; --i) {
+    //     add_symbol_to_equation_tree(equation->symbols.data[i], &eq_tree);
+    // }
 
-    *transformations = equations_r.length;
-    return equations_r.data;
+
+    return transformations;
 
 }
 

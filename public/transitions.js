@@ -1,5 +1,35 @@
+
+
+
+
 const produceTransitions = () =>
 {
+
+  console.log("hello");
+
+  let equation = document.getElementById("equation").value;
+    
+    console.log(equation);
+
+    fetch("", {
+      method: "CALC",
+      headers: {
+        "Content-Type": "text/plain",
+      },
+      body: equation
+    })
+    .then(response => response.body)
+    .then(data => {
+      console.log("Ответ от сервера:", data);
+    })
+    .catch(error => {
+      console.error("Ошибка:", error);
+    });
+
+
+
+
+
   let expr = constructExpression(document.getElementById("equation").value); 
   console.log(expr, expr.toString());
   let exprs = getPermutations(expr);

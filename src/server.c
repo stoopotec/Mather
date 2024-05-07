@@ -44,7 +44,7 @@ int serve_client(int socketfd) {
     printf(E_BOLD "received:" E_RESET "\n");
     printf(E_ITALIC);
     for (size_t i = 0; i < buffer_length; ++i) { putchar(buffer[i]); }
-    printf(E_RESET);
+    printf(E_RESET "\n");
 
 
     printf(INFO "i receive:\n");
@@ -53,7 +53,7 @@ int serve_client(int socketfd) {
 
     printf("\turl: %s\n", url);
 
-    char* filename = get_path_alloc(url, ".");
+    char* filename = get_path_alloc(url, "public");
     
     printf("\tpath: %s\n", filename);
 
@@ -81,27 +81,29 @@ int serve_client(int socketfd) {
 
     if (method == GET) {
 
-        printf(INFO "i think client wants file on disk " E_ITALIC "%s" E_RESET "\n", filename);
+        printf(INFO "i think client wants my file " E_ITALIC "%s" E_RESET "\n", filename);
 
         send_small_file(socketfd, filename);
         
 
     } else if (method == CALC) {
 
-        char* equation = buffer+2;
-        for (; *equation != '\0' && (*(equation-1) != '\n') && *(equation-2) != '\n'; ++equation) {}
+        char* equation = buffer+4;
+        for (; *equation != '\0' && !((equation[-1] == '\n') && (equation[-2] == '\r') && (equation[-3] == '\n') && (equation[-4] == '\r')); ++equation) { }
 
-        printf(INFO "client wants to calculate this silly equation " E_ITALIC "%s " E_RESET "\n", equation);
 
-        printf(WARN "BUT I CANNOT DO IT!! (sending 501 Not Implemented)\n");
+        printf(INFO "client wants to calculate this silly equation " E_ITALIC "%s" E_RESET "\n", equation);
+
+        printf(WARN "BUT I CANNOT DO IT!! (sending 200 ok for fun)\n");
         const char* resp = 
-            "HTTP/1.1 501 Not Implemented\n"
+            "HTTP/1.1 200 OK\n"
             "Server: Prikol\n"
-            "Connection: Close\n"
+            "Connection: keep-alive\n"
+            "Content-Length: 13"
             "\n"
-            "\n";
+            "\n"
+            "{\"tea\":\"hot\"}";
         send(socketfd, resp, sizeof(resp), 0);
-
 
     } else {
 
@@ -140,7 +142,7 @@ char* read_all_alloc(size_t* len, int socketfd) {
     char* data = (char*)malloc(allocated * sizeof(*data));
     do {
         allocated += 1024;
-        data = (char*)realloc(data, allocated);
+        data = (char*)realloc(data, allocated + 1);
         ssize_t read_len = read(socketfd, data + *len, allocated - *len);
         if (-1 == read_len) return NULL;
         *len += read_len;
@@ -152,6 +154,7 @@ char* read_all_alloc(size_t* len, int socketfd) {
             return NULL;
         }
     } while (0);
+    data[*len] = '\0';
     return data;
 }
 

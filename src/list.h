@@ -128,4 +128,10 @@
     size_t alloc_length;\
 }
 
+#define LIST_ANON(type) struct {\
+    type* data;\
+    size_t length;\
+    size_t alloc_length;\
+}
+
 
