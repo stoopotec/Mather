@@ -271,7 +271,7 @@ struct equation get_equation_from_string(const char* string) {
         // );
 
         if (next_symbol.type) {
-            LIST_APPEND(next_symbol, eq.symbols, struct symbol);
+            LIST_APPEND(next_symbol, eq.symbols);
         }
         else spaces = 1;
     }
@@ -308,14 +308,14 @@ struct list_symbol_t braces_to_reverse_polish(const struct list_symbol_t symbols
         if (symbols.data[i].type & VARIABLE) { 
 
             // printf("RP: %3ld [[ %s ]] ", i, get_string_from_symbol(symbols.data[i]));
-            LIST_PUSH_AT(symbols.data[i], symbols_r, where_paste, symbol_t);
+            LIST_PUSH_AT(symbols.data[i], symbols_r, where_paste);
             where_paste = symbols_r.length;
             // PRINT_SYMBOL_LIST(symbols_r);
        
         } else if (symbols.data[i].type & OPERATOR) { 
 
             // printf("RP: %3ld [[ %s ]] ", i, get_string_from_symbol(symbols.data[i]));
-            LIST_APPEND(symbols.data[i], symbols_r, symbol_t);
+            LIST_APPEND(symbols.data[i], symbols_r);
             where_paste = symbols_r.length - 1; // useless
 
             // printf("RP: SWAP? %s and %s\n", 
@@ -340,7 +340,7 @@ struct list_symbol_t braces_to_reverse_polish(const struct list_symbol_t symbols
             size_t pc = 0;
             struct list_symbol_t braces_stuff = braces_to_reverse_polish(symbols, i+1, &pc);
             i += pc;
-            LIST_PUSH_RANGE_AT(braces_stuff.data, braces_stuff.length, symbols_r, where_paste, symbol_t);
+            LIST_PUSH_RANGE_AT(braces_stuff.data, braces_stuff.length, symbols_r, where_paste);
             previous_braces_end = where_paste + braces_stuff.length - 1;
             LIST_FREE(braces_stuff);
             where_paste = symbols_r.length;
@@ -393,24 +393,24 @@ struct equation  to_infix_notation(struct equation reverse_polish) {
 
     for (size_t i = 0; i < reverse_polish.symbols.length; ++i) {
         if (reverse_polish.symbols.data[i].type & OPERAND) {
-            LIST_APPEND(reverse_polish.symbols.data[i], symbol_stack, symbol_t);
+            LIST_APPEND(reverse_polish.symbols.data[i], symbol_stack);
         } else {
             if (norm_r.symbols.length > 0) {
-                LIST_PUSH_AT(brace_open, norm_r.symbols, 0, symbol_t);
-                LIST_APPEND(brace_close, norm_r.symbols, symbol_t);
+                LIST_PUSH_AT(brace_open, norm_r.symbols, 0);
+                LIST_APPEND(brace_close, norm_r.symbols);
             }
             
             size_t push_at = norm_r.symbols.length;
 
             if (symbol_stack.length > 0) {
-                LIST_PUSH_AT(symbol_stack.data[symbol_stack.length-1], norm_r.symbols, push_at, symbol_t);
+                LIST_PUSH_AT(symbol_stack.data[symbol_stack.length-1], norm_r.symbols, push_at);
                 symbol_stack.length -= 1;
             }
 
-            LIST_PUSH_AT(reverse_polish.symbols.data[i], norm_r.symbols, push_at, symbol_t);
+            LIST_PUSH_AT(reverse_polish.symbols.data[i], norm_r.symbols, push_at);
 
             if (symbol_stack.length > 0) {
-                LIST_PUSH_AT(symbol_stack.data[symbol_stack.length-1], norm_r.symbols, push_at, symbol_t);
+                LIST_PUSH_AT(symbol_stack.data[symbol_stack.length-1], norm_r.symbols, push_at);
                 symbol_stack.length -= 1;
             }
 
@@ -458,7 +458,7 @@ double compute(struct equation* postfix) {
             strcpy(number_str, postfix->symbols.data[i].text);
             number = atof(number_str);
             free(number_str);
-            LIST_APPEND(number, number_stack, double);
+            LIST_APPEND(number, number_stack);
         }
     }
 
@@ -509,12 +509,12 @@ list_transformation_t get_all_transformations(struct equation* equation) {
             .type = NUMBER,
         };
         solution_symbol.text_len = snprintf(solution_symbol.text, 20, "%lf", solution);
-        LIST_APPEND(solution_symbol, solution_equation.symbols, symbol_t);
+        LIST_APPEND(solution_symbol, solution_equation.symbols);
         transformation_t solution_transformation = {
             .equation = solution_equation,
             .comment = "solve the problem",
         };
-        LIST_APPEND(solution_transformation, transformations, transformation_t);
+        LIST_APPEND(solution_transformation, transformations);
     }
 
     // struct equation_tree eq_tree = null_tree;
@@ -546,7 +546,7 @@ void add_symbol_to_equation_tree(symbol_t symbol, struct equation_tree* tree) {
             tree->filled = 1;
             return;
         }
-        LIST_INIT_LEN(tree->sub_equations, get_operator_arity(tree->symbol.type), struct equation_tree);
+        LIST_INIT_LEN(tree->sub_equations, get_operator_arity(tree->symbol.type));
         goto check;
     }
 

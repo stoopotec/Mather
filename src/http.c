@@ -32,10 +32,10 @@ char* get_url_alloc(char* http) {
     LIST(char) url = {0};
 
     for (; *http != ' ' && *http != '\0'; ++http) {
-        LIST_APPEND(*http, url, char)
+        LIST_APPEND(*http, url);
     }
 
-    LIST_APPEND('\0', url, char)
+    LIST_APPEND('\0', url);
 
     return url.data;
 }
@@ -44,13 +44,13 @@ char* get_path_alloc(char* url, const char* add_to_start) {
     LIST(char) path = {0};
     if (add_to_start != NULL) {
         for (; *add_to_start != '\0'; ++add_to_start) {
-            LIST_APPEND(*add_to_start, path, char)
+            LIST_APPEND(*add_to_start, path);
         }
     }
     for (; *url != '?' && *url != '\0'; ++url) {
-        LIST_APPEND(*url, path, char);
+        LIST_APPEND(*url, path);
     }
-    LIST_APPEND('\0', path, char);
+    LIST_APPEND('\0', path);
     return path.data;
 }
 
@@ -64,14 +64,14 @@ list_url_arg_t get_url_args(const char* url) {
 
 
     url_arg_t null_arg = {.key = NULL, .key_len = 0, .val = NULL, .val_len = 0};
-    LIST_APPEND(null_arg, args, url_arg_t);
+    LIST_APPEND(null_arg, args);
 
     args.data[args.length-1].key = url;
 
 
     for (size_t i = 0; url[i] != '\0'; ++i) {
         if (url[i] == '&') {
-            LIST_APPEND(null_arg, args, url_arg_t);
+            LIST_APPEND(null_arg, args);
             args.data[args.length-2].val_len = url + i - args.data[args.length-2].val;
             args.data[args.length-1].key = url + i + 1;
             continue;
