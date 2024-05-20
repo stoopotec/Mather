@@ -73,15 +73,8 @@ int send_small_file(int socketfd, const char* filename) {
         response = (char*)malloc((file_stat.st_size + 2048) * sizeof(*response));
         response_len = sprintf(response, 
             "HTTP/1.1 200 OK"
-            "Vary: Origin"
-            "Access-Control-Allow-Credentials: true"
-            "Accept-Ranges: bytes"
-            "Cache-Control: public, max-age=0"
             "Content-Type: image/svg+xml"
             "Content-Length: %ld"
-            "Date: Tue, 07 May 2024 10:27:42 GMT"
-            "Connection: keep-alive"
-            "Keep-Alive: timeout=5"
             "\n"
             "\n"
             "%s", file_stat.st_size, content
