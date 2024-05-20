@@ -68,7 +68,7 @@ int send_small_file(int socketfd, const char* filename) {
     char* response;
     size_t response_len;
 
-    if (1) {
+    if (content_type[0] == 't' && content_type[1] == 'e' && content_type[2] == 'x' && content_type[3] == 't') {
 
         response = (char*)malloc((file_stat.st_size + 2048) * sizeof(*response));
         response_len = sprintf(response, 
@@ -86,6 +86,25 @@ int send_small_file(int socketfd, const char* filename) {
             "\n"
             "%s", file_stat.st_size, content
         );
+    } else if (content_type[0] == 'i' && content_type[1] == 'm' && content_type[2] == 'a' && content_type[3] == 'g') {
+        response = (char*)malloc((file_stat.st_size + 2048) * sizeof(*response));
+        response_len = sprintf(response, 
+            "HTTP/1.1 200 OK"
+            "Content-Type: image/png"
+            "Content-Length: %ld"
+            "\n"
+            "\n", file_stat.st_size
+        );
+
+        printf(INFO "response is ready\n");
+    
+        printf(E_RESET INFO "sending...\n");
+
+
+        size_t ret = send(socketfd, response, response_len, MSG_MORE);
+        ret += send(socketfd, content, file_stat.st_size, 0);
+        return ret;
+
     } else {
         response = (char*)malloc((file_stat.st_size + 2048) * sizeof(*response));
         response_len = sprintf(response, 
@@ -102,12 +121,6 @@ int send_small_file(int socketfd, const char* filename) {
     }
 
     printf(INFO "response is ready\n");
-    
-    if (content_type[0] == 'i' && content_type[1] == 'm' && content_type[2] == 'a' && content_type[3] == 'g') {
-        printf(E_BOLD "response:\n" E_RESET E_ITALIC); 
-        for (size_t i = 0; i < response_len; ++i) printf("%ld: %3d (%c); ", i, response[i], response[i]);
-        printf(E_RESET "\n");
-    }
     
     printf(E_RESET INFO "sending...\n");
 

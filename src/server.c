@@ -103,7 +103,7 @@ int serve_client(int socketfd) {
             "Content-Length: 13"
             "\n"
             "\n"
-            "{\"tea\":\"hot\"}";
+            "{\"tea\":\"pot\"}";
         send(socketfd, resp, sizeof(resp), 0);
 
     } else {
