@@ -34,47 +34,50 @@ int serve_client(int socketfd) {
     printf(INFO "new connection\n");
 
 
-    size_t buffer_length;
-    char* buffer = read_all_alloc(&buffer_length, socketfd);
-    if (buffer == NULL) {
-        fprintf(stderr, ERR "buffer is NULL\n");
-        exit(EXIT_FAILURE);
-    }
+    http_message_additional msg = get_http_message(socketfd);
 
     printf(E_BOLD "received:" E_RESET "\n");
     printf(E_ITALIC);
-    for (size_t i = 0; i < buffer_length; ++i) { putchar(buffer[i]); }
+    printf("method:   %s\n", msg.message.method);
+    printf("url:      %s\n", msg.message.url);
+    for (size_t i = 0; i < msg.message.url_args.length; ++i) {
+        printf("\t%s=%s&\n", msg.message.url_args.data[i].key, msg.message.url_args.data[i].value);
+    }
+    printf("http ver: %s\n", msg.message.http_version);
+    printf("headers:\n");
+    for (size_t i = 0; i < msg.message.headers.length; ++i) {
+        printf("\t%s: %s\n", msg.message.headers.data[i].key, msg.message.headers.data[i].value);
+    }
+    printf("body: %s\n\n", msg.message.body);
     printf(E_RESET "\n");
 
 
     printf(INFO "i receive:\n");
 
-    char* url = get_url_alloc(buffer);
+    char* url = msg.message.url;
 
     printf("\turl: %s\n", url);
 
-    char* filename = get_path_alloc(url, "public");
+    char* filename = strcpy_a(url, "public");
     
     printf("\tpath: %s\n", filename);
 
-    list_url_arg_t args = get_url_args(url);
+    // printf("\targs: %s\n", (args.length == 0) ? "(args.length == 0)" : "");
 
-    printf("\targs: %s\n", (args.length == 0) ? "(args.length == 0)" : "");
+    // for (size_t i = 0; i < args.length; ++i) {
+    //     printf("\t\t\'");
 
-    for (size_t i = 0; i < args.length; ++i) {
-        printf("\t\t\'");
-
-        for (size_t j = 0; j < args.data[i].key_len; ++j) putchar(args.data[i].key[j]);
+    //     for (size_t j = 0; j < args.data[i].key_len; ++j) putchar(args.data[i].key[j]);
         
-        printf("\': \'");
+    //     printf("\': \'");
 
-        for (size_t j = 0; j < args.data[i].val_len; ++j) putchar(args.data[i].val[j]);
+    //     for (size_t j = 0; j < args.data[i].val_len; ++j) putchar(args.data[i].val[j]);
         
-        printf("\'\n");
-    }
+    //     printf("\'\n");
+    // }
 
 
-    enum METHOD_E method = get_method(buffer);
+    enum METHOD_E method = get_method(msg.message.method);
 
     printf("\tmethod: %d\n", method);
 
@@ -88,11 +91,9 @@ int serve_client(int socketfd) {
 
     } else if (method == CALC) {
 
-        char* equation = buffer+4;
-        for (; *equation != '\0' && !((equation[-1] == '\n') && (equation[-2] == '\r') && (equation[-3] == '\n') && (equation[-4] == '\r')); ++equation) { }
+        
 
-
-        printf(INFO "client wants to calculate this silly equation " E_ITALIC "%s" E_RESET "\n", equation);
+        printf(INFO "client wants to calculate this silly equation " E_ITALIC "%s" E_RESET "\n", msg.message.body);
 
         printf(WARN "BUT I CANNOT DO IT!! (sending 200 ok for fun)\n");
         const char* resp = 
@@ -118,10 +119,8 @@ int serve_client(int socketfd) {
 
     }
     
-    free(url);
     free(filename);
-    LIST_FREE(args);
-    free(buffer);
+    free(msg.alloced_raw_content);
     close(socketfd);
     printf(INFO "session end\n\n");
 

@@ -68,7 +68,7 @@ int send_small_file(int socketfd, const char* filename) {
     char* response;
     size_t response_len;
 
-    if (0) {
+    if (1) {
 
         response = (char*)malloc((file_stat.st_size + 2048) * sizeof(*response));
         response_len = sprintf(response, 

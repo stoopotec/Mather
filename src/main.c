@@ -21,6 +21,7 @@
 int socketfd;
 
 void inter(int integer) {
+    printf(INFO "closing the server socket...\n");
     close(socketfd);
     exit(EXIT_SUCCESS);
 }
@@ -34,7 +35,7 @@ int main() {
     }
 
 
-    signal(SIGINT , (__sighandler_t)&inter);
+    signal(SIGINT, (__sighandler_t)&inter);
 
 
     struct sockaddr_in addr_in;
@@ -66,15 +67,3 @@ int main() {
 
     return 0;
 }
-
-
-/* 
- * TODO:
- *  
- *  
- *
- *
- */
-
-
-

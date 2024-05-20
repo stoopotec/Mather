@@ -39,7 +39,7 @@ char* get_url_alloc(char* http);
 
 list_url_arg_t get_url_args(const char* url);
 
-char* get_path_alloc(char* url, const char* add_to_start);
+char* strcpy_a(const char* url, const char* add_to_start);
 
 
 
@@ -51,15 +51,6 @@ char* get_path_alloc(char* url, const char* add_to_start);
 
 
 
-
-
-
-
-
-
-struct header {
-    LIST_ANON(struct {const char* key; const char* value}) headers;
-};
 
 
 
@@ -277,3 +268,28 @@ enum HTTP_CODES_E {
 };
 
 const char* get_code_comment(enum HTTP_CODES_E code);
+
+
+
+
+struct http_message {
+    char* http_version;
+    char  status_code[4];
+    char* status_description;
+    char* method;
+    char* url;
+    LIST_ANON(struct {char* key; char* value;}) headers;
+    LIST_ANON(struct {char* key; char* value;}) url_args;
+    char* body;
+};
+
+struct http_message server_response_custom(enum HTTP_CODES_E status_code, char* body);
+struct http_message server_response_default();
+struct http_message server_response_notfound();
+
+
+
+void send_http_message(int sockfd, struct http_message* message);
+
+typedef struct {struct http_message message; char* alloced_raw_content;} http_message_additional;
+http_message_additional get_http_message(int sockfd);
