@@ -1,0 +1,1222 @@
+\documentclass{article}
+
+\usepackage{needspace}
+
+
+
+\usepackage[utf8]{inputenc}
+\usepackage[T2A]{fontenc}
+\usepackage[english,russian]{babel}
+
+
+\usepackage{amsmath, amssymb, amsfonts}
+\usepackage{hyperref}
+\usepackage{tikz, float, pgfplots}
+
+
+\usepackage[margin=3cm]{geometry}
+
+
+
+
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=none,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
+
+
+
+\usepackage{graphicx}
+
+
+
+
+
+
+
+
+
+
+
+\begin{document}
+
+
+    \begin{titlepage}
+
+        \Large
+
+        \begin{center}
+            
+            
+            МИНИСТЕРСТВО ОБРАЗОВАНИЯ РЕСПУБЛИКИ БЕЛАРУСЬ
+
+            Учреждение образования «БЕЛОРУССКИЙ ГОСУДАРСТВЕННЫЙ 
+
+            ТЕХНОЛОГИЧЕСКИЙ УНИВЕРСИТЕТ»
+
+        \end{center}
+        
+        \vspace{4cm}
+        
+        Реферат
+        
+        По дисциплине 'Основы алгоритмизации и программирования'
+
+        На тему 'Обучение нейронных сетей с помощью метода градиентного спуска'
+        
+        \vspace{4cm}
+        
+        \begin{flushright}
+            Выполнил:
+            
+            Крупкевич Иван Андреевич
+
+            БГТУ ИСИТ 1--1
+        \end{flushright}
+
+        \vspace{2cm}
+
+        \begin{flushright}
+            Проверил:
+            
+            Белодед Николай Иванович
+        \end{flushright}
+        
+        
+        \vspace{\fill}
+        
+        \begin{center}
+            Минск \the\year
+        \end{center}
+
+    \end{titlepage}
+
+
+    
+    \renewcommand{\contentsname}{Содержание}
+    
+    \tableofcontents
+    \newpage
+    
+
+
+
+    \def\remark#1{\textbf{Замечание:}#1\\}
+
+    \def\dx{3}
+    \def\dy{-2}
+    \def\mindy{-0.5}
+    \def\todo#1{\begin{Large}ДОДЕЛАЙ '#1'\end{Large}}
+
+    \def\insetrc#1
+    {
+        \begin{figure}[H]
+            \lstset{language=C}
+            \begin{lstlisting}
+#1
+            \end{lstlisting}
+        \end{figure}
+    }
+
+    \def\figneuron{
+        \begin{figure}[H]
+            \begin{center}
+                \begin{tikzpicture}
+                    
+                    \node (X1)   at (\dx * 0, \mindy * 0) {$x_1$};
+                    \node (X2)   at (\dx * 0, \mindy * 1) {$x_2$};
+                    \node (dots) at (\dx * 0, \mindy * 2) {$\vdots$};
+                    \node (Xn)   at (\dx * 0, \mindy * 3) {$x_n$};
+                    
+                    \node[shape=circle,draw=black] (N) at (\dx * 1, \mindy + \mindy / 2) {$N$};
+    
+                    \node (val) at (\dx * 2, \mindy + \mindy / 2) {value};
+    
+    
+                    \path[->,draw=black] (X1) -- (N)  node[pos=0.6, above] {$w_{1}$};
+                    \path[->,draw=black] (X2) -- (N)  node[pos=0.6, below] {$w_{2}$};
+                    \path[->,draw=black] (Xn) -- (N)  node[pos=0.6, below] {$w_{n}$};
+                    
+                    \path[->,draw=black] (N) -- (val);
+                \end{tikzpicture}
+            \end{center}
+        \end{figure}
+    }
+
+
+
+
+    \def\figneuralnetworksmall{
+        \begin{figure}[H]
+            \begin{center}
+                \begin{tikzpicture}
+                    
+                    \node[shape=circle,draw=black] (1) at (0, \dy/2 + \dy * 0) {$\ N_1\ $};
+                    \node[shape=circle,draw=black] (2) at (0, \dy/2 + \dy * 1) {$\ N_2\ $};
+                    
+                    \node[shape=circle,draw=black] (3) at (\dx, \dy * 0) {$\ N_3\ $};
+                    \node[shape=circle,draw=black] (4) at (\dx, \dy * 1) {$\ N_4\ $};
+                    \node[shape=circle,draw=black] (5) at (\dx, \dy * 2) {$\ N_5\ $};
+                    
+                    \node[shape=circle,draw=black] (6) at (\dx * 2, \dy) {$\ N_6\ $};
+    
+                    \path[->,draw=black] (1) -- (3) node[pos=0.8, above] {$w_{13}$};
+                    \path[->,draw=black] (1) -- (4) node[pos=0.8, above] {$w_{14}$};
+                    \path[->,draw=black] (1) -- (5) node[pos=0.8, above] {$w_{15}$};
+                    
+                    \path[->,draw=black] (2) -- (3) node[pos=0.8, above] {$w_{23}$};
+                    \path[->,draw=black] (2) -- (4) node[pos=0.8, above] {$w_{24}$};
+                    \path[->,draw=black] (2) -- (5) node[pos=0.8, above] {$w_{25}$};
+                    
+                    \path[->,draw=black] (3) -- (6) node[pos=0.8, above] {$w_{36}$};
+                    \path[->,draw=black] (4) -- (6) node[pos=0.8, above] {$w_{46}$};
+                    \path[->,draw=black] (5) -- (6) node[pos=0.8, above] {$w_{56}$};
+                \end{tikzpicture}
+            \end{center}
+        \end{figure}
+    }
+
+
+    \def\figneuralnetworkbig{
+        \begin{figure}[H]
+            \begin{center}
+                \begin{tikzpicture}
+                    
+                    \node[shape=circle,draw=black] (A1) at (\dx * 0  , \dy * 0  ) {$\ A_1\ $};
+                    \node[shape=circle,draw=black] (A2) at (\dx * 0  , \dy * 1  ) {$\ A_2\ $};
+                    \node[shape=circle,draw=black] (An) at (\dx * 0  , \dy * 2.5) {$\ A_n\ $};
+
+                    \node[shape=circle,draw=black] (B1) at (\dx * 1  , \dy * 0  ) {$\ B_1\ $};
+                    \node[shape=circle,draw=black] (B2) at (\dx * 1  , \dy * 1  ) {$\ B_2\ $};
+                    \node[shape=circle,draw=black] (Bn) at (\dx * 1  , \dy * 2.5) {$\ B_n\ $};
+
+                    \node[shape=circle]            (D)  at (\dx * 1.75,\dy * 1.25){\LARGE$\hdots$};
+
+                    \node[shape=circle,draw=black] (N1) at (\dx * 2.5, \dy * 0  ) {$\ N_1\ $};
+                    \node[shape=circle,draw=black] (N2) at (\dx * 2.5, \dy * 1  ) {$\ N_2\ $};
+                    \node[shape=circle,draw=black] (Nn) at (\dx * 2.5, \dy * 2.5) {$\ N_n\ $};
+                    
+    
+                    \path[->,draw=black] (A1) -- (B1);
+                    \path[->,draw=black] (A1) -- (B2);
+                    \path[->,draw=black] (A1) -- (Bn);
+
+                    \path[->,draw=black] (A2) -- (B1);
+                    \path[->,draw=black] (A2) -- (B2);
+                    \path[->,draw=black] (A2) -- (Bn);
+
+                    \path[->,draw=black] (An) -- (B1);
+                    \path[->,draw=black] (An) -- (B2);
+                    \path[->,draw=black] (An) -- (Bn);
+                    
+
+                    \path[->,draw=black] (B1) -- (D);
+                    \path[->,draw=black] (B2) -- (D);
+                    \path[->,draw=black] (Bn) -- (D);
+                    
+
+                    \path[->,draw=black] (D) -- (N1);
+                    \path[->,draw=black] (D) -- (N2);
+                    \path[->,draw=black] (D) -- (Nn);
+                \end{tikzpicture}
+            \end{center}
+        \end{figure}
+    }
+
+
+    \def\figneuralnetworkerror{
+        \begin{figure}[H]
+            \begin{center}
+                \begin{tikzpicture}
+                    
+                    \node[shape=circle,draw=black] (I1) at (\dx * 0  , \dy * 0  ) {$\ I_1\ $};
+                    \node[shape=circle,draw=black] (I2) at (\dx * 0  , \dy * 1  ) {$\ I_2\ $};
+                    \node[                       ] (Id) at (\dx * 0  , \dy * 2  ) {\LARGE$\vdots$};
+                    \node[shape=circle,draw=black] (In) at (\dx * 0  , \dy * 3  ) {$\ I_n\ $};
+
+                    \node[shape=circle]            (D)  at (\dx * 1,\dy * 1.25){\LARGE$\hdots$};
+
+                    \node[shape=circle,draw=black] (Q1) at (\dx * 2, \dy * 0  ) {$\ Q_1\ $};
+                    \node[shape=circle,draw=black] (Q2) at (\dx * 2, \dy * 1  ) {$\ Q_2\ $};
+                    \node[                       ] (Qd) at (\dx * 2, \dy * 2  ) {\LARGE$\vdots$};
+                    \node[shape=circle,draw=black] (Qn) at (\dx * 2, \dy * 3  ) {$\ Q_n\ $};
+                    
+
+                    
+
+                    \path[->,draw=black] (I1) -- (D);
+                    \path[->,draw=black] (I2) -- (D);
+                    \path[->,draw=black] (In) -- (D);
+                    
+
+                    \path[->,draw=black] (D) -- (Q1);
+                    \path[->,draw=black] (D) -- (Q2);
+                    \path[->,draw=black] (D) -- (Qn);
+                \end{tikzpicture}
+            \end{center}
+        \end{figure}
+    }
+
+
+
+
+
+
+
+
+    % ВВЕДЕНИЕ
+
+
+        % Это тройки:
+
+        % \begin{figure}[H]
+        %     \includegraphics[width=3cm]{resources/three.png}
+        %     \includegraphics[width=3cm]{resources/three1.png}
+        %     \includegraphics[width=3cm]{resources/three2.png}
+        %     \includegraphics[width=3cm]{resources/three3.png}
+        % \end{figure}
+
+        % Они небрежно написаны, и визуализированы в чрезвычайно маленьком 
+        % разрешении $28$px$ \times 28$px. Хоть и значения пикселей в этих
+        % картинках сильно различаются, это не мешает чему-то очень умному
+        % в нашей зрительной коре
+        % решить, что они представляют одну сущность, одновременно
+        % понимая, что другие картинки описывают другие сущности.\\
+
+
+        % Но если бы я сказал вам: "\textit{Эй, напиши программу, которая принимает на
+        % вход сетку, $28$px$ \times 28$px, и выдаёт одно число,
+        % от нуля до девяти, угадывая какая цифра изображена.}"\ 
+        % То задача оказалась бы от смешного простой, до назойливо сложной\ldots
+
+        % Если только вы не живёте в пещере, и я думаю мне не предётся долго
+        % убеждать вас в актуальности и важности машинного обучения и 
+        % нейросетей в настоящем и будущем.
+
+
+
+    
+
+
+    \section{Нейронная сеть}
+    \ \\
+        
+
+
+        \subsection{Нейрон}
+        \label{sec:neuron}
+        \ \\
+
+        
+        \figneuron
+
+        где $x_1, x_2, \ldots, x_n$ -- значения всех нейронов предыдущего
+        слоя, $w_1, w_2, \ldots, w_n$ -- веса нейрона $N$. Также
+        в нейрон зачастую добавляют баяс (от англ. bias -- Смещение).
+        Баяс это число, добавляемое к выходному значению, чтобы убрать
+        последствия умножения на ноль (если $x_1, x_2, \ldots, x_n$ 
+        будут нулями, без баяса не будет способов получить на выходе
+        не ноль).\\
+        
+        Рассчёт значения одного нейрона следующего слоя происходит так:
+        
+        
+        \[
+            N(x_1, x_2, \ldots, x_n) = 
+            \sigma\left( 
+                \sum_{i = 1}^{n}\left( w_i x_i \right) + b 
+            \right),
+        \]
+
+        где $w_i$ это вес (просто коэффициент).
+        
+        $x_i$ это входной сигнал от $i$-того нейрона предыдущего слоя.
+        
+        $b$ -- баяс.
+
+        $\sigma$ -- это функция активации.
+        Эта функция может быть любой, главное чтобы могла отделять 'активированный'
+        нейрон от 'неактивированного' (За более подробным объяснением можно
+        углубиться в биологию, я же просто возьму из неё гипотезу, что должно
+        быть именно так). Так, можно взять, например функцию
+        $
+            \begin{cases}
+                1 & x > 0 \\
+                0 & x \leq 0 \\
+            \end{cases}
+        $,
+        в которой выполняется то самое единственное условие, НО
+        эта функция не непрерывна, что плохо, потому что метод
+        градиентного спуска в своей основе построен на 
+        производных, а производная не может быть определена на
+        всей области определения таких функций.\\
+
+        В свою очередь существует сигмоида:
+        
+
+        \begin{figure}[H]
+            \[\sigma(x) = \dfrac{1}{1+e^{-x}}\]
+            \begin{center}
+                \begin{tikzpicture}
+                    \begin{axis}[axis lines=middle, width=15cm, height=7cm,
+                        xmin=-10, xmax=10]
+                        \addplot[domain=-10:10, color=blue, smooth, solid]
+                            {1/(1+e^(-x))};
+                        \addplot[domain=-10:10, gray, dashed]{1};
+                        \addplot[domain=-10:10, gray, dashed]{0};
+                    \end{axis}
+                \end{tikzpicture}
+            \end{center}
+        \end{figure}
+
+        Сигмоида и непрерывна, и может определить активен ли нейрон, и множество
+        значений у этой функции от $0$ до $1$ (это не обязательно, но позволяет
+        не уходить в очень большие числа при подсчётах).
+
+
+        Собственно, реализовать нейрон можно так:
+
+        
+        \lstset{language=C}
+        \begin{lstlisting}
+double sigmoid(double x)
+{
+    return 1.0 / (1.0 + exp(-x));
+}
+
+struct neuron
+{
+    double* weights;
+    size_t weights_len;
+    double bias;
+
+    double forward(double* signals)
+    {
+        double result = 0.0;
+
+        for (size_t i = 0; i < weights_len; ++i)
+            result += weights[i] * signals[i];
+        
+        result += bias;
+
+        return sigmoid(result);
+    }
+};
+        \end{lstlisting}
+
+
+        \subsection{Перцептрон}
+        \ \\
+
+        Перцептрон -- это модель нейронной сети,
+        как мозг, в которой нейроны
+        расположены слой за слоем:
+
+        \figneuralnetworksmall
+        
+        $N_1$ и $N_2$ -- это входные нейроны, на которые подаётся сигнал.
+
+
+        $N_3, N_4, N_5$ -- нейроны скрытого слоя,
+        
+
+        $N_6$ -- Выходной нейрон.\\
+
+        % \todo{немного про скрытый слой}
+
+        % \todo{
+        %     написать про то, что перцептрон -- это БАЗА,
+        %     на которой всё строится
+        % }
+
+
+        % Одним из применений нейросетей является предсказание промежуточных результатов у
+        % различных функций, будь это результаты физических измерений,
+        % \todo, или \todo.\\
+        
+        % Под искусственной нейронной сетью можно понимать фунцию
+        % $N : \mathbb{R}^n \to \mathbb{R}^k$, где $n$ - количество
+        % значений на входе, а $k$, соответственно, количество значений на выходе.
+        
+        
+        % Что такое нейроны, как они связаны между собой,
+        % и почему такая структура должна работать?
+
+
+
+
+    
+
+    \subsection{Перцептрон и матрицы}
+    \label{sec:matrix}
+    \ \\
+
+        
+        На практике, особенно в перцептронах,
+        напрямую нейронами,
+        как структурой (была приведена выше),
+        никто не пользуется, потому что можно оптимизировать
+        гигантское количество нейронов в матрицу
+        для каждого слоя.
+        Соответствующее доказательство приведено в этой главе.\\
+    
+        Рассмотрим в общем случае, что происходит при переходе
+        из слоя $n$ (назовём его $L$)
+        на слой $n+1$ (назовём его $K$):
+        пусть на слое $K$ было $k$ нейронов, а на слое $L$ -- $l$ нейронов,
+        тогда у каждого нейрона слоя $L$ будет $k$ входов.
+
+        \begin{figure}[H]
+            \centering
+            \begin{tikzpicture}
+                
+                \node[shape=circle,minimum size=1cm,draw=black] (L1) at (\dx * 0,   \dy * 1.2 * 0  ) {$L_{1  }$};
+                \node[shape=circle,minimum size=1cm,draw=black] (L2) at (\dx * 0,   \dy * 1.2 * 1  ) {$L_{2  }$};
+                \node[                                        ] (Ld) at (\dx * 0,   \dy * 1.2 * 1.75){$\LARGE\vdots$};
+                \node[shape=circle,minimum size=1cm,draw=black] (Ln) at (\dx * 0,   \dy * 1.2 * 2.5) {$L_{l  }$};
+                
+
+                
+                \node[shape=circle,minimum size=1cm,draw=black] (K1) at (\dx * 1.5, \dy * 1.2 * 0  ) {$K_{1  }$};
+                \node[shape=circle,minimum size=1cm,draw=black] (K2) at (\dx * 1.5, \dy * 1.2 * 1  ) {$K_{2  }$};
+                \node[                                        ] (Kd) at (\dx * 1.5, \dy * 1.2 * 1.75){$\LARGE\vdots$};
+                \node[shape=circle,minimum size=1cm,draw=black] (Kn) at (\dx * 1.5, \dy * 1.2 * 2.5) {$K_{k  }$};
+                
+
+
+                \path[->,draw=black] (L1) -- (K1) node[pos=0.8, above] {$w_{1, 1}$};
+                \path[->,draw=black] (L1) -- (K2) node[pos=0.8, above] {$w_{1, 2}$};
+                \path[->,draw=black] (L1) -- (Kn) node[pos=0.8, above] {$w_{1, k}$};
+
+                \path[->,draw=black] (L2) -- (K1) node[pos=0.8, above] {$w_{2, 1}$};
+                \path[->,draw=black] (L2) -- (K2) node[pos=0.8, above] {$w_{2, 2}$};
+                \path[->,draw=black] (L2) -- (Kn) node[pos=0.8, above] {$w_{2, k}$};
+
+                \path[->,draw=black] (Ln) -- (K1) node[pos=0.8, above] {$w_{l, 1}$};
+                \path[->,draw=black] (Ln) -- (K2) node[pos=0.8, above] {$w_{l, 2}$};
+                \path[->,draw=black] (Ln) -- (Kn) node[pos=0.8, above] {$w_{l, k}$};
+
+            \end{tikzpicture}
+        \end{figure}
+        
+        Вообще говоря, слой $K$ -- это $k$-мерный вектор, а
+        слой $L$ -- $l$-мерный. Нужно найти такую функцию,
+        которая будет делать желаемое преобразование слоёв.
+        Такой функцией может быть матрица, причём размером только $k \times l$.
+        Докажем это:
+        пусть в ней веса расположены следующим образом:
+
+        \begin{align}
+            \begin{bmatrix}
+                w_{1,1} & w_{2,1} & \cdots  & w_{l,1} \\
+                w_{1,2} & w_{2,2} & \cdots  & w_{l,2} \\
+                \vdots  & \vdots  & \ddots  & \vdots  \\
+                w_{1,k} & w_{2,k} & \cdots  & w_{l,k} \\
+            \end{bmatrix}
+        \end{align}
+
+        Тогда нужно проверить, даёт ли эта матрица желаемый переход
+        (для каждого нейрона нужно, чтобы выполнялась
+        определяющая его функция \ref{sec:neuron}):
+        
+        \begin{align}
+            \begin{bmatrix}
+                w_{1,1} & w_{2,1} & \cdots  & w_{l,1} \\
+                w_{1,2} & w_{2,2} & \cdots  & w_{l,2} \\
+                \vdots  & \vdots  & \ddots  & \vdots  \\
+                w_{1,k} & w_{2,k} & \cdots  & w_{l,k} \\
+            \end{bmatrix}
+            \begin{bmatrix}
+                L_1    \\
+                L_2    \\
+                \vdots \\
+                L_l    \\
+            \end{bmatrix} =
+            \begin{bmatrix}
+                w_{1,1} L_1 + w_{2,1} L_2 + \ldots + w_{l,1} L_l\\
+                w_{1,2} L_1 + w_{2,2} L_2 + \ldots + w_{l,2} L_l\\
+                \vdots                                          \\
+                w_{1,k} L_1 + w_{2,k} L_2 + \ldots + w_{l,k} L_l\\
+            \end{bmatrix} =
+            \begin{bmatrix}
+                \sum_{i = 1}^{l}\left( w_{i,1} L_i \right)\\
+                \sum_{i = 1}^{l}\left( w_{i,2} L_i \right)\\
+                \vdots                                    \\
+                \sum_{i = 1}^{l}\left( w_{i,k} L_i \right)\\
+            \end{bmatrix}
+        \end{align}
+
+    
+        До определения нейрона (\ref{sec:neuron}) 
+        не хватает функции активации и байеса.
+        Опередлив, что, для вектора, функция активации применяется
+        ко всем элементам этого вектора:
+        $
+            \sigma
+            \left(
+                \begin{bmatrix}
+                    x_1     \\
+                    x_2     \\
+                    \vdots  \\
+                    x_n     \\
+                \end{bmatrix}
+            \right) = 
+            \begin{bmatrix}
+                \sigma(x_1) \\
+                \sigma(x_2) \\
+                \vdots      \\
+                \sigma(x_n) \\
+            \end{bmatrix}
+        $,
+        её станет легко добавить, просто обернув выражение $(2)$ в неё:
+
+        \begin{align}
+            \sigma
+            \left(
+            \begin{bmatrix}
+                w_{1,1} & w_{2,1} & \cdots  & w_{l,1} \\
+                w_{1,2} & w_{2,2} & \cdots  & w_{l,2} \\
+                \vdots  & \vdots  & \ddots  & \vdots  \\
+                w_{1,k} & w_{2,k} & \cdots  & w_{l,k} \\
+            \end{bmatrix}
+            \begin{bmatrix}
+                L_1    \\
+                L_2    \\
+                \vdots \\
+                L_l    \\
+            \end{bmatrix}
+            \right)
+        \end{align}
+
+        Также внутри функции, нужно добавить вектор сдвигов слоя $K$.
+
+        \begin{align}
+            \sigma
+            \left(
+            \begin{bmatrix}
+                w_{1,1} & w_{2,1} & \cdots  & w_{l,1} \\
+                w_{1,2} & w_{2,2} & \cdots  & w_{l,2} \\
+                \vdots  & \vdots  & \ddots  & \vdots  \\
+                w_{1,k} & w_{2,k} & \cdots  & w_{l,k} \\
+            \end{bmatrix}
+            \begin{bmatrix}
+                L_1    \\
+                L_2    \\
+                \vdots \\
+                L_l    \\
+            \end{bmatrix} + 
+            \begin{bmatrix}
+                b_1    \\
+                b_2    \\
+                \vdots \\
+                b_k    \\
+            \end{bmatrix}
+            \right) = 
+            \begin{bmatrix}
+                K_1    \\
+                K_2    \\
+                \vdots \\
+                K_k    \\
+            \end{bmatrix}
+        \end{align}
+
+        Этим и будет функция перехода к следующему слою!
+
+        % это железное доказательство %
+
+
+        \lstset{language=C}
+        \begin{lstlisting}
+struct NN
+{
+    NN();
+    NN(size_t* layers, size_t layers_len);
+
+
+    size_t* layers;
+    size_t layers_len;
+
+    double** biases;
+    double** weights;
+
+
+    void forward(double* output, double* input);
+};
+
+NN::NN()
+{
+    layers_len = 0;
+    layers = nullptr;
+    biases = nullptr;
+    weights = nullptr;
+}
+
+NN::NN(size_t* layers, size_t layers_len) : layers(layers), layers_len(layers_len)
+{
+    biases = (double**)malloc((layers_len - 1) * sizeof(*biases));
+    for (size_t i = 0; i < layers_len - 1; ++i)
+        biases[i] = (double*)malloc((layers[i+1]) * sizeof(**biases));
+
+
+    weights = (double**)malloc((layers_len - 1) * sizeof(*weights));
+    for (size_t i = 0; i < layers_len - 1; ++i)
+        weights[i] = (double*)malloc((layers[i+1] * layers[i]) * sizeof(**weights));
+
+
+    for (size_t i = 0; i < layers_len - 1; ++i)
+    {
+        for (size_t j = 0; j < layers[i+1]; ++j)
+            biases[i][j] = randd(-10.0, 10.0);
+
+        for (size_t j = 0; j < (layers[i+1] * layers[i]); ++j)
+            weights[i][j] = randd(-10.0, 10.0);
+    }
+}
+
+void NN::forward(double* output, double* input)
+{
+    size_t max_layer = 0;
+    for (size_t i = 0; i < layers_len; ++i) 
+        if (layers[i] > max_layer)
+            max_layer = layers[i];
+    
+    double** layer_buffer = (double**)malloc(2 * sizeof(*layer_buffer));
+    layer_buffer[0] = (double*)malloc(max_layer * sizeof(**layer_buffer));
+    layer_buffer[1] = (double*)malloc(max_layer * sizeof(**layer_buffer));
+
+
+    for (size_t i = 0; i < layers[0]; ++i)
+        layer_buffer[0][i] = input[i];
+
+    for (size_t i = 1; i < layers_len; ++i) {
+        for (size_t nli = 0; nli < layers[i]; ++nli) { // nli -> next layer index
+
+            for (size_t pli = 0; pli < layers[i-1]; ++pli) { // pli -> previous layer index
+                layer_buffer[i%2][nli] += layer_buffer[(i-1)%2][pli] * weights[i-1][nli * layers[i-1] + pli];
+            }
+
+            layer_buffer[i%2][nli] += biases[i-1][nli];
+
+            layer_buffer[i%2][nli] = sigmoid(layer_buffer[i%2][nli]);
+        }
+    }
+
+
+    for (size_t i = 0; i < layers[layers_len-1]; ++i)
+        output[i] = layer_buffer[(layers_len-1) % 2][i];
+
+    free(layer_buffer[0]);
+    free(layer_buffer[1]);
+    free(layer_buffer);
+
+    
+}            
+        \end{lstlisting}
+
+
+
+
+
+    \section{Рассчёт ошибки нейронной сети}
+    \ \\
+
+        Ошибка нейронной сети -- это среднее значение квадратов
+        \textit{расстояний} между желаемыми результатами, и фактическими
+        (посчитанным нейронной сетью).
+
+        То есть берётся большое количество заранее
+        заготовленной информации: ключи и значения,
+        для каждого ключа вычисляется квадрат расстояния между исходным значением,
+        и посчитанным нейронной сетью, и потом находится среднее.
+
+        Слово \textit{расстояние} используется потому, что результат
+        может быть не просто числом, а ещё и вектором.
+        В квадрат нужно возводить ради оптимизации:
+        для нахождения расстояния между векторами нужно использовать
+        теорему Пифагора, в которой есть квадратный корень.
+        Возведением в квадрат можно избавится от этой тяжёлой операции.\\
+
+        Например вот код для подсчёта ошибки:
+
+
+        \lstset{language=C}
+        \begin{lstlisting}
+double error(NN* nn, double* in, double* out)
+{
+    double err = 0.0;
+    
+    double* out_predicted = (double*)malloc(nn->layers[nn->layers_len-1] * sizeof(*out_predicted));
+    nn->forward(out_predicted, in);
+
+    for (size_t i = 0; i < nn->layers[(nn->layers_len)-1]; ++i)
+        err += (out[i] - out_predicted[i]) * (out[i] - out_predicted[i]);
+    
+    free(out_predicted);
+
+    return err;
+}
+        \end{lstlisting}
+
+
+
+
+
+    \section{Градиентный спуск}
+    \ \\
+
+
+
+        Для обучения нейронных сетей люди понапридумывали кучу разных методов. Метод же
+        обратного спуска, один из самых древнейших, придуман в 1847 году Огюстеном Луи Коши,
+        нашёл своё применение в обучении нейронных сетей только после изобретения компьютеров (1957 год).
+
+        Нейронная сеть не может сразу пророчить относительно правильные результаты, для этого
+        её веса нужно настроить соответствующим образом. Вручную, если нейронная сеть большая, 
+        веса будет настраивать только безумец!
+
+        Градиентный спуск, как видно из названия, будет 'спускать' функцию по её градиенту.
+
+        \texttt{
+            Градиентом функции $\varphi$, $n$ переменных $(x_{1},\;\ldots ,\;x_{n})$ называется $n$-мерный вектор
+            $
+                \left(
+                    {\frac {\partial \varphi} {\partial x_{1}} }, \;
+                    \ldots, \;
+                    {\frac {\partial \varphi} {\partial x_{n}} }
+                \right)
+            $,
+            компоненты которого равны \textbf{частным производным} $\varphi$ по всем её аргументам.
+        }
+
+        Частная производная функции $\varphi$ по $x_k$ 
+        ($\frac {\partial \varphi} {\partial x_k}$) это
+
+        \begin{align}
+            \lim_{\varDelta x \to 0} {\frac{\varphi(x_1, x_2, \ldots, x_k+\varDelta x, \ldots, x_n) - \varphi(x_1, x_2, \ldots, x_n)}{\varDelta x}}
+        \end{align}
+
+
+        Как применить всё это для описания градиента нейронной сети?
+        Изменением входных данных мы не добъёмся изменения весов, поэтому
+        нужно изменять веса и баясы.
+
+        Можно понимать нейронную сеть не просто как функцию от вектора входных
+        данных, а как функцию и от всех её весов тоже.
+        Собственно можно брать частные производные только по
+        её весам, оставить входные данные константами.
+
+
+        \lstset{language=C}
+        \begin{lstlisting}
+void gradient_descent(NN* nn, double* in, double* out, double delta, double k)
+{
+    NN bnn; // bnn -> buffer neural network
+    NNcpy(&bnn, nn);
+    
+    NN derr = NN(nn->layers, nn->layers_len); // derr -> delta error nn
+
+
+
+    double err = error(nn, in, out);
+
+    for (size_t layer = 0; layer < nn->layers_len - 1; ++layer)
+    {
+        for (size_t in_layer = 0; in_layer < nn->layers[layer]; ++in_layer)
+        {
+            bnn.weights[layer][in_layer] += delta;
+            derr.weights[layer][in_layer] = error(&bnn, in, out) - err;
+            bnn.weights[layer][in_layer] = nn->weights[layer][in_layer];
+
+            bnn.biases[layer][in_layer] += delta;
+            derr.biases[layer][in_layer] = error(&bnn, in, out) - err;
+            bnn.biases[layer][in_layer] = nn->biases[layer][in_layer];
+        }
+    }
+
+
+    for (size_t layer = 0; layer < nn->layers_len - 1; ++layer)
+    {
+        for (size_t in_layer = 0; in_layer < nn->layers[layer]; ++in_layer)
+        {
+            nn->weights[layer][in_layer] -= derr.weights[layer][in_layer] * k;
+            nn->biases[layer][in_layer] -= derr.biases[layer][in_layer] * k;
+        }
+    }
+
+    printf("%5lf --> %5lf (de = %5lf)\n", err, error(nn, in, out), error(nn, in, out) - err);
+
+}
+        \end{lstlisting}
+
+
+
+
+
+        % \paragraph{Почему это должно работать?}
+        % \ \\
+
+        % \remark{
+        %     В обычной функции, конечно, можно менять всё, но в контексте этой темы
+        %     под изменением чего бы то ни было в функции,
+        %     чаще всего я имею в виду изменение весов и байесов, а не входных
+        %     параметров.
+        % }
+
+        % Например в очень простой нейронной сети,
+        % в которой всего один вес, а байес равен нулю, 
+        % $N(x) = x \cdot w,$
+        % можно будет менять только $w$.
+
+        % Для начала решим задачу: Очень нужно найти закономерности в следующих данных,
+
+        % $[x] \to [N(x)]:$
+
+        % $[1] \to [2];$ 
+
+        % $[2] \to [4];$ 
+
+        % $[3] \to [6];$ 
+
+        % $[4] \to [8];$ 
+
+        % \todo{сделать нормальную таблицу}
+
+        % Конечно, в данном примере очевидно, что $w = 2$, но 'очевидно' не сработает,
+        % когда весов будут тысячи. Поступим другим образом: попробуем угадать $w$!
+        % пускай мы выбрали $w = 3.14$. Далее нужно проверить, как работает текущая сеть:
+        % найти ошибку. 
+        % $(3.14 \cdot 1  -  2)^2 = 1.2996$
+
+        % Ошибки, большие чем приблизительно ноль - гигантские ошибки, потому что
+        % значения меньше еденицы в квадрате уменьшаются, а больше еденицы увеличиваются. 
+
+
+
+
+        % \ \\ \ \\ \ \\
+
+        % Частная производная одного параметра $x_k$ функции $\varphi$,
+        % $n$ переменных определяется как
+
+        % \[
+        %     \lim_{\varDelta x \to 0}
+        %     {
+        %         \frac
+        %             {
+        %                 \varphi(x_1, x_2, \ldots, x_k + \varDelta x, \ldots, x_n) - 
+        %                 \varphi(x_1, x_2, \ldots, x_n)
+        %             }
+        %             {\varDelta x}
+        %     }.
+        % \]
+
+        % В сечении плоскости, параллельной оси $Ok$ ($x$ с индексом $k$),
+        % которой принадлежат все точки $x_1, x_2, \ldots, x_n$,
+        % частная производная $\varphi$ по $x_k$ показывает
+        % тангенс угла наклона касательной в точке.
+
+        % \begin{figure}[H]
+        %     \begin{center}
+        %         \begin{tikzpicture}
+        %             \begin{axis}[xmin=-2, xmax=2, ymin=-2, ymax=2,
+        %                 xticklabel style={anchor=south west},
+        %                 %grid style=dashed,
+        %                 axis lines=middle,
+        %                 xlabel=$Ok$,
+        %                 ylabel=$O\varphi$,
+        %                 title={some graphs}]
+        %                 \addplot[color=blue, smooth, domain=-2:2]{-0.7*x^4+0.3*x^3+1.6*x^2-0.8*x+0.2}
+        %                     node[draw, pos=0.4] (P1) {}
+        %                     node[draw, pos=0.5] (P2) {}
+        %                 ;
+
+        %                 % \node (X1)   at (\dx * 0, \mindy * 0) {$x_1$};
+                        
+        %                 % \path[->,draw=black] (P1) -- (P2);
+        %                 \draw[red] (P1) -- (P2);
+        %             \end{axis}
+
+        %         \end{tikzpicture}
+        %     \end{center}
+        % \end{figure}
+
+        % (убывания, если знак -) функции, при всех заданных параметах, кроме
+        % $x_k$, в точках $x_k$.\\
+
+        % Как известно из школы % ))))
+        % геометрический смысл производной -- это
+        % тангенс угла наклона касательной к графику функции.
+
+        % Частная производная характеризует скорость изменения функции при изменении
+        % только одной переменной, то есть движения вдоль кординатной оси.
+
+        % Скорость тут, это тангенс угла наклона касательной
+        % параллельной той оси, к которой принадлежит переменная.
+        % Это может быть немного странно. Можно провести аналогию
+        % с физикой: отношение маленького изменения расстояния к 
+        % маленькому изменению времени это скорость, метры в секунду,
+        
+
+        % Частной производной же можно найти тангенс угла наклона касательной,
+        % параллельной той оси, к которой принадлежит переменная по которой
+        % находится частная производная.
+
+        % Так вот, если для каждого параметра функции $n$ переменных найти
+        % частную производную, хотя-бы приближённо, то можно будет также 
+        % приближённо представлять тангенсы углов наклона касательных!\\
+
+        % Это не сложно сделать, достаточно посчитать $n$ функций с  
+        % добавлением небольшного $\varDelta x$ для всех параметров функции
+        % (сложность алгоритма $O(n)$, где $n$ -- это количество всех
+        % весов и байесов).
+
+
+        
+
+    \section{Код}
+    \ \\
+            
+        В следующем примере я буду реализовывать, для примера, рассчёт
+        значений функции логического и с помощью нейронной сети:
+
+        (также этот код можно скачать с моего GitHub: \url{https://github.com/stoopotec/nn/raw/main/main.cpp})
+
+        
+
+        \lstset{language=C}
+        \begin{lstlisting}
+#include <iostream>
+#include <math.h>
+
+
+#define ARR_LEN(x) (sizeof(x) / sizeof(*x))
+
+
+
+double randd(double from, double to)
+{
+    return ((double)rand() / (double)RAND_MAX) * (to - from) + from;
+}
+
+
+double sigmoid(double x)
+{
+    return 1.0 / (1.0 + exp(-x));
+}
+
+
+
+
+struct NN
+{
+    NN();
+    NN(size_t* layers, size_t layers_len);
+
+
+    size_t* layers;
+    size_t layers_len;
+
+    double** biases;
+    double** weights;
+
+
+    void forward(double* output, double* input);
+};
+
+NN::NN()
+{
+    layers_len = 0;
+    layers = nullptr;
+    biases = nullptr;
+    weights = nullptr;
+}
+
+NN::NN(size_t* layers, size_t layers_len) : layers(layers), layers_len(layers_len)
+{
+    biases = (double**)malloc((layers_len - 1) * sizeof(*biases));
+    for (size_t i = 0; i < layers_len - 1; ++i)
+        biases[i] = (double*)malloc((layers[i+1]) * sizeof(**biases));
+
+
+    weights = (double**)malloc((layers_len - 1) * sizeof(*weights));
+    for (size_t i = 0; i < layers_len - 1; ++i)
+        weights[i] = (double*)malloc((layers[i+1] * layers[i]) * sizeof(**weights));
+
+
+    for (size_t i = 0; i < layers_len - 1; ++i)
+    {
+        for (size_t j = 0; j < layers[i+1]; ++j)
+            biases[i][j] = randd(-10.0, 10.0);
+
+        for (size_t j = 0; j < (layers[i+1] * layers[i]); ++j)
+            weights[i][j] = randd(-10.0, 10.0);
+    }
+}
+
+void NN::forward(double* output, double* input)
+{
+    size_t max_layer = 0;
+    for (size_t i = 0; i < layers_len; ++i) 
+        if (layers[i] > max_layer)
+            max_layer = layers[i];
+    
+    double** layer_buffer = (double**)malloc(2 * sizeof(*layer_buffer));
+    layer_buffer[0] = (double*)malloc(max_layer * sizeof(**layer_buffer));
+    layer_buffer[1] = (double*)malloc(max_layer * sizeof(**layer_buffer));
+
+
+    for (size_t i = 0; i < layers[0]; ++i)
+        layer_buffer[0][i] = input[i];
+
+    for (size_t i = 1; i < layers_len; ++i) {
+        for (size_t nli = 0; nli < layers[i]; ++nli) { // nli -> next layer index
+
+            for (size_t pli = 0; pli < layers[i-1]; ++pli) { // pli -> previous layer index
+                layer_buffer[i%2][nli] += layer_buffer[(i-1)%2][pli] * weights[i-1][nli * layers[i-1] + pli];
+            }
+
+            layer_buffer[i%2][nli] += biases[i-1][nli];
+
+            layer_buffer[i%2][nli] = sigmoid(layer_buffer[i%2][nli]);
+        }
+    }
+
+
+    for (size_t i = 0; i < layers[layers_len-1]; ++i)
+        output[i] = layer_buffer[(layers_len-1) % 2][i];
+
+    free(layer_buffer[0]);
+    free(layer_buffer[1]);
+    free(layer_buffer);
+
+    
+}
+
+
+double error(NN* nn, double* in, double* out)
+{
+    double err = 0.0;
+    
+    double* out_predicted = (double*)malloc(nn->layers[nn->layers_len-1] * sizeof(*out_predicted));
+    nn->forward(out_predicted, in);
+
+    for (size_t i = 0; i < nn->layers[(nn->layers_len)-1]; ++i)
+        err += (out[i] - out_predicted[i]) * (out[i] - out_predicted[i]);
+    
+    free(out_predicted);
+
+    return err;
+}
+
+
+void NNcpy(NN* to, NN* from)
+{
+    *to = NN(from->layers, from->layers_len);
+
+
+    for (size_t layer = 0; layer < to->layers_len - 1; ++layer)
+        for (size_t in_layer = 0; in_layer < to->layers[layer]; ++in_layer)
+        {
+            to->weights[layer][in_layer] = from->weights[layer][in_layer];
+
+            to->biases[layer][in_layer] = from->biases[layer][in_layer];
+        }
+
+}
+
+void gradient_descent(NN* nn, double* in, double* out, double delta, double k)
+{
+    NN bnn; // bnn -> buffer neural network
+    NNcpy(&bnn, nn);
+    
+    NN derr = NN(nn->layers, nn->layers_len); // derr -> delta error nn
+
+
+
+    double err = error(nn, in, out);
+
+    for (size_t layer = 0; layer < nn->layers_len - 1; ++layer)
+    {
+        for (size_t in_layer = 0; in_layer < nn->layers[layer]; ++in_layer)
+        {
+            bnn.weights[layer][in_layer] += delta;
+            derr.weights[layer][in_layer] = error(&bnn, in, out) - err;
+            bnn.weights[layer][in_layer] = nn->weights[layer][in_layer];
+
+            bnn.biases[layer][in_layer] += delta;
+            derr.biases[layer][in_layer] = error(&bnn, in, out) - err;
+            bnn.biases[layer][in_layer] = nn->biases[layer][in_layer];
+        }
+    }
+
+
+    for (size_t layer = 0; layer < nn->layers_len - 1; ++layer)
+    {
+        for (size_t in_layer = 0; in_layer < nn->layers[layer]; ++in_layer)
+        {
+            nn->weights[layer][in_layer] -= derr.weights[layer][in_layer] * k;
+            nn->biases[layer][in_layer] -= derr.biases[layer][in_layer] * k;
+        }
+    }
+
+    printf("%5lf --> %5lf (de = %5lf)\n", err, error(nn, in, out), error(nn, in, out) - err);
+
+}
+
+
+
+
+double in[][2] = 
+{
+    {0.0, 0.0},
+    {0.0, 1.0},
+    {1.0, 0.0},
+    {1.0, 1.0},
+};
+
+double out[][1] = 
+{
+    {0.0},
+    {0.0},
+    {0.0},
+    {1.0},
+};
+
+
+int main(void) {
+
+    size_t layers[] = {2, 1};
+
+    NN nn(layers, ARR_LEN(layers));
+
+
+    for (size_t iterations = 0; iterations < 20000; ++iterations)
+        for (size_t i = 0; i < 4; ++i)
+        {
+            gradient_descent(&nn, in[i], out[i], 0.5, 0.5);
+        }
+
+}
+        \end{lstlisting}
+        
+    
+
+\end{document}
