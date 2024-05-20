@@ -95,20 +95,22 @@ int serve_client(int socketfd) {
 
         printf(INFO "client wants to calculate this silly equation " E_ITALIC "%s" E_RESET "\n", msg.message.body);
 
-        printf(WARN "BUT I CANNOT DO IT!! (sending 200 ok for fun)\n");
+        printf(WARN "отправляю заглушку\n");
         const char* resp = 
             "HTTP/1.1 200 OK\n"
             "Server: Prikol\n"
             "Connection: keep-alive\n"
-            "Content-Length: 13"
+            "Content-Type: application/xml\n"
+            "Content-Length: 13\n"
             "\n"
-            "\n"
-            "{\"tea\":\"pot\"}";
+            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<div classname=\"transition-list\"><div classname=\"transition\"><div classname=\"description\">описание</div><div classname=\"equation\">"
+            "$${\\displaystyle 1+{\\frac {1}{1\\cdot 3}}+{\\frac {1}{1\\cdot 3\\cdot 5}}+{\\frac {1}{1\\cdot 3\\cdot 5\\cdot 7}}+{\\frac {1}{1\\cdot 3\\cdot 5\\cdot 7\\cdot 9}}+\\ldots +{\\frac {1}{1+\\displaystyle {\\frac {1}{1+\\displaystyle {\\frac {2}{1+\\displaystyle {\\frac {3}{1+\\displaystyle {\\frac {4}{1+\\displaystyle {\\frac {5}{1+\\ldots }}}}}}}}}}}}={\\sqrt {\\frac {e\\cdot \\pi }{2}}}}.$$"
+            "</div></div></div>";
         send(socketfd, resp, sizeof(resp), 0);
 
     } else {
 
-        printf(WARN "клиенты они такие.. умные. он короче прислал какую-то гадость, отправлю ему сообщение о server error, чтобы не подумал вдруг что это он дебил, а то подаст ещё в суд на эту программу, оно мне надо?\n");
+        printf(WARN "клиент прислал гадость");
         const char* resp = 
         "HTTP/1.1 501 Not Implemented\n"
         "Server: Prikol\n"

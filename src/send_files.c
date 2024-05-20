@@ -62,31 +62,21 @@ int send_small_file(int socketfd, const char* filename) {
 
     const char* content_type = define_content_type(filename);
 
-    printf(INFO "i think " E_ITALIC TOSTRING(content_type) E_RESET " is %s\n", content_type);
+    printf(INFO "i think " E_ITALIC TOSTRING(content_type) E_RESET " is \'%s\'\n", content_type);
 
 
     char* response;
     size_t response_len;
 
-    if (content_type[0] == 't' && content_type[1] == 'e' && content_type[2] == 'x' && content_type[3] == 't') {
+    if (1) {
 
         response = (char*)malloc((file_stat.st_size + 2048) * sizeof(*response));
         response_len = sprintf(response, 
             "HTTP/1.1 200 OK"
-            "Content-Type: image/svg+xml"
+            "Content-Type: %s"
             "Content-Length: %ld"
             "\n"
-            "\n"
-            "%s", file_stat.st_size, content
-        );
-    } else if (content_type[0] == 'i' && content_type[1] == 'm' && content_type[2] == 'a' && content_type[3] == 'g') {
-        response = (char*)malloc((file_stat.st_size + 2048) * sizeof(*response));
-        response_len = sprintf(response, 
-            "HTTP/1.1 200 OK"
-            "Content-Type: image/png"
-            "Content-Length: %ld"
-            "\n"
-            "\n", file_stat.st_size
+            "\n", content_type, file_stat.st_size
         );
 
         printf(INFO "response is ready\n");
@@ -97,21 +87,39 @@ int send_small_file(int socketfd, const char* filename) {
         size_t ret = send(socketfd, response, response_len, MSG_MORE);
         ret += send(socketfd, content, file_stat.st_size, 0);
         return ret;
-
-    } else {
-        response = (char*)malloc((file_stat.st_size + 2048) * sizeof(*response));
-        response_len = sprintf(response, 
-            "HTTP/1.1 %d %s\n"
-            "Server: Prikol\n"
-            "Content-Type: %s\n"
-            "Connection: Keep-Alive\n"
-            "Content-Length: %ld\n"
-            "\n"
-            "\n"
-            "%s", CODE_200_OK, get_code_comment(CODE_200_OK),
-            content_type, file_stat.st_size, content
-        );
     }
+    // } else if (content_type[0] == 'i' && content_type[1] == 'm' && content_type[2] == 'a' && content_type[3] == 'g') {
+    //     response = (char*)malloc((file_stat.st_size + 2048) * sizeof(*response));
+    //     response_len = sprintf(response, 
+    //         "HTTP/1.1 200 OK"
+    //         "Content-Type: image/png"
+    //         "Content-Length: %ld"
+    //         "\n"
+    //         "\n", file_stat.st_size
+    //     );
+
+    //     printf(INFO "response is ready\n");
+    
+    //     printf(E_RESET INFO "sending...\n");
+
+
+    //     size_t ret = send(socketfd, response, response_len, MSG_MORE);
+    //     ret += send(socketfd, content, file_stat.st_size, 0);
+    //     return ret;
+
+    // } else {
+    // if (1) {
+    //     response = (char*)malloc((file_stat.st_size + 2048) * sizeof(*response));
+    //     response_len = sprintf(response, 
+    //         "HTTP/1.1 %d %s\n"
+    //         "Content-Type: %s\n"
+    //         "Content-Length: %ld\n"
+    //         "\n"
+    //         "\n"
+    //         "%s", CODE_200_OK, get_code_comment(CODE_200_OK),
+    //         content_type, file_stat.st_size, content
+    //     );
+    // }
 
     printf(INFO "response is ready\n");
     
