@@ -10,12 +10,14 @@
 \newfontfamily\monofont{Hack}
 
 
+
+
 \usepackage{needspace}
 
 
 
 \usepackage{polyglossia}
-\setmainlanguage{russian}
+% \setmainbreaklines=true,language{russian}
 
 
 \usepackage{amsmath, amssymb, amsfonts}
@@ -34,111 +36,103 @@
 \usepackage{color}
 
 
-\lstset{frame=none,
-  aboveskip=3mm,
-  belowskip=3mm,
-  showstringspaces=false,
-  columns=flexible,
-  basicstyle={\small\ttfamily},
-  numbers=none,
-  numberstyle=\tiny\color{gray},
-  keywordstyle=\color{blue},
-  commentstyle=\color{dkgreen},
-  stringstyle=\color{mauve},
-  breaklines=true,
-  breakatwhitespace=true,
-  tabsize=3
-}
-
-
-
 \usepackage{graphicx}
 
 
 
 
+\usepackage{pdfpages}
 
 
 
 
+\newcommand{\img}[2]{
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.3\textheight]{#1}
+        \caption{#2}
+    \end{figure}
+}
 
 
 
 \begin{document}
 
 
-    \begin{titlepage}
+%     \begin{titlepage}
 
-        \Large
+%         \Large
 
-        \begin{center}
+%         \begin{center}
             
             
-            МИНИСТЕРСТВО ОБРАЗОВАНИЯ РЕСПУБЛИКИ БЕЛАРУСЬ
+%             МИНИСТЕРСТВО ОБРАЗОВАНИЯ РЕСПУБЛИКИ БЕЛАРУСЬ
 
-            Учреждение образования «БЕЛОРУССКИЙ ГОСУДАРСТВЕННЫЙ 
+%             Учреждение образования «БЕЛОРУССКИЙ ГОСУДАРСТВЕННЫЙ 
 
-            ТЕХНОЛОГИЧЕСКИЙ УНИВЕРСИТЕТ»
+%             ТЕХНОЛОГИЧЕСКИЙ УНИВЕРСИТЕТ»
 
-        \end{center}
+%         \end{center}
         
-        \vspace{1cm}
+%         \vspace{1cm}
         
-        \begin{tabular}{ll}
-            Факультет & Информационных технологий \\
-            Кафедра & Информационных систем и технологий \\
-            Специальность & 6-05-0611-01 «Информационные системы и технологии» \\
-        \end{tabular}
+%         \begin{tabular}{ll}
+%             Факультет & Информационных технологий \\
+%             Кафедра & Информационных систем и технологий \\
+%             Специальность & 6-05-0611-01 «Информационные системы и технологии» \\
+%         \end{tabular}
 
-        \vspace{1cm}
+%         \vspace{1cm}
         
-        \begin{center}
-            {\bfseries ПОЯСНИТЕЛЬНАЯ ЗАПИСКА КУРСОВОГО ПРОЕКТА}
-        \end{center}
+%         \begin{center}
+%             {\bfseries ПОЯСНИТЕЛЬНАЯ ЗАПИСКА КУРСОВОГО ПРОЕКТА}
+%         \end{center}
 
-        \vspace{1cm}
+%         \vspace{1cm}
         
-        по дисциплине «Компьютерные языки разметки»
+%         по дисциплине «Компьютерные языки разметки»
 
-        Тема: Веб-сайт «Калькулятор простых алгебраических выражений»
+%         Тема: Веб-сайт «Калькулятор простых алгебраических выражений»
         
-        \vspace{2cm}
+%         \vspace{2cm}
         
-        \begin{minipage}{0.5\textwidth}
-        \underline{\hspace{2cm}} \\
-        \footnotesize{Введите текст здесь}
-        \end{minipage}
+%         \begin{minipage}{0.5\textwidth}
+%         \underline{\hspace{2cm}} \\
+%         \footnotesize{Введите текст здесь}
+%         \end{minipage}
 
-%         Исполнитель
-% студент 1 курса 1 группы		______________	Д. С. Жук
-% подпись, дата
-% Руководитель
-% 	           ассистент                           	______________		Д. В. Сазонова
-% должность, учен. степень, ученое звание	подпись, дата
+% %         Исполнитель
+% % студент 1 курса 1 группы		______________	Д. С. Жук
+% % подпись, дата
+% % Руководитель
+% % 	           ассистент                           	______________		Д. В. Сазонова
+% % должность, учен. степень, ученое звание	подпись, дата
 
-        \begin{flushright}
-            Выполнил:
+%         \begin{flushright}
+%             Выполнил:
             
-            Крупкевич Иван Андреевич
+%             Крупкевич Иван Андреевич
 
-            БГТУ ИСИТ 1--1
-        \end{flushright}
+%             БГТУ ИСИТ 1--1
+%         \end{flushright}
 
-        \vspace{2cm}
+%         \vspace{2cm}
 
-        \begin{flushright}
-            Проверил:
+%         \begin{flushright}
+%             Проверил:
             
-        \end{flushright}
+%         \end{flushright}
         
         
-        \vspace{\fill}
+%         \vspace{\fill}
         
-        \begin{center}
-            Минск \the\year
-        \end{center}
+%         \begin{center}
+%             Минск \the\year
+%         \end{center}
 
-    \end{titlepage}
+%     \end{titlepage}
+
+    \includepdf[pages=1]{pz-first.pdf}
 
 
     
@@ -237,7 +231,7 @@
 
     \subsection{Выбор способа верстки}
 
-    При выборе способа верстки для моего проекта было решено использовать HTML и CSS в сочетании с библиотекой KaTeX. HTML (HyperText Markup Language) является основным языком разметки веб-страниц, который позволяет структурировать контент и создавать элементы интерфейса. CSS (Cascading Style Sheets) используется для стилизации веб-страниц, что позволяет задавать внешний вид элементов и макет страницы.
+    При выборе способа верстки для моего проекта было решено использовать HTML и CSS в сочетании с библиотекой KaTeX. HTML (HyperText Markup breaklines=true,language) является основным языком разметки веб-страниц, который позволяет структурировать контент и создавать элементы интерфейса. CSS (Cascading Style Sheets) используется для стилизации веб-страниц, что позволяет задавать внешний вид элементов и макет страницы.
 
     KaTeX представляет собой быструю и легковесную библиотеку для отрисовки математических выражений в формате TeX на веб-страницах. Благодаря своей эффективности и производительности, KaTeX обеспечивает быструю загрузку и отображение сложных математических формул без необходимости использования серверного рендеринга.
 
@@ -315,23 +309,137 @@
 
     \section{Тестирование веб-сайта}
 
-    4.1. Адаптивный дизайн веб-сайта
-    Представить как осуществляться будет адаптивность вашего сайта под разные устройста в различных браузерах
-    4.2. Кроссбраузерность веб-сайта
-    В кроссбраузерное тестирование входит общий вид вашего проекта в других браузерах (сохранились ли шрифты, не съехала ли анимация и так далее)
-    4.3. Руководство пользователя
-    Описание того, как пользователю пользоваться вашим сайтом со скриншотами, а также как он может взаимодействовать с основными ключевыми функциями вашего продукта.
-    4.4. Выводы
-    Заключение (подытожить что было сделано вами, что было вами использовано дополнительно не встречающееся в курсе, ссылка на репозитарий Github с веб-сайтом курсового проекта)
-    Список использованных источников.
-    Приложение (полный исходный текст программы разработанного приложения с подробными комментариями в виде листинга).
-    Приложение А Прототипы веб-страниц
-    Приложение Б Макет структуры веб-сайта
-    Приложение В Листинг НТML-документа
-    Приложение Г Листинг SCSS и CSS
-    Приложение Д Листинг XML-файлов
-    Приложение Е Листинг SVG
-    Приложение Ж Листинг JavaScript
+    \subsection{Адаптивный дизайн веб-сайта}
+
+    \begin{itemize}
+        \item \textbf{Проверка на различных устройствах:}
+        Веб-сайт был протестирован на различных устройствах с разными размерами экранов, чтобы убедиться, что дизайн адаптируется корректно и отображается правильно на всех устройствах.
+        
+        \item \textbf{Тестирование в различных браузерах:}
+        Веб-сайт был протестирован в различных популярных браузерах, таких как Google Chrome, Mozilla Firefox, Safari и Microsoft Edge, чтобы убедиться, что он отображается одинаково хорошо во всех браузерах.
+        
+        \item \textbf{Использование инструментов разработчика:}
+        Для более детального анализа адаптивности веб-сайта были использованы инструменты разработчика браузера, позволяющие эмулировать различные устройства и размеры экранов.
+        
+    \end{itemize}
+    
+    После проведения тестирования были выявлены и исправлены возможные проблемы с адаптивностью веб-сайта, что позволило обеспечить оптимальное пользовательское взаимодействие на всех устройствах и в различных браузерах.
+
+
+    \subsection{Кроссбраузерность веб-сайта}
+
+    
+    \img{index_chrome.png}{страница с калькулятором на Chrome}
+    \img{getstarted_chrome.png}{начальная страница на Chrome}
+    \img{theorems_chrome.png}{страница с теоремами на Chrome}
+    
+    \img{index_firefox.png}{страница с калькулятором на Firefox}
+    \img{getstarted_firefox.png}{начальная страница на Firefox}
+    \img{theorems_firefox.png}{страница с теоремами на Firefox}
+    
+    \img{index_mobile.png}{страница с калькулятором на Телефоне}
+    \img{getstarted_mobile.png}{начальная страница на Телефоне}
+    \img{theorems_mobile.png}{страница с теоремами на Телефоне}
+        
+    
+
+
+    \subsection{Руководство пользователя}
+
+    \img{getstarted_firefox.png}{начальная страница}
+    На начальной странице представлен удобный интерфейс, позволяющий пользователям легко навигироваться по различным разделам. Нажав на кнопку "Dive In", пользователь перемещается на страницу, где представлены различные теоремы. В то же время, активация переключателя низу экрана направляет пользователя на страницу с калькулятором. Здесь пользователи могут вводить математические выражения и получать соответствующие ответы. Такой подход обеспечивает удобство использования и эффективный доступ к различным функциям веб-ресурса.
+
+
+    \subsection{Выводы}
+
+    В ходе выполнения курсового проекта был разработан веб-сайт с удобным интерфейсом, позволяющим пользователям изучать теоремы и использовать калькулятор для математических вычислений. Дополнительно к использованию стандартных технологий, был написан сервер на языке программирования C для обеспечения более эффективной обработки запросов и управления данными.
+
+
+    Ссылка на GitHub: \href{https://github.com/stoopotec/Counter}{https://github.com/stoopotec/Counter}
+
+    
+    \newpage
+
+
+
+    \section{Приложение А: листинг файла ./src/http.c}
+    \lstinputlisting[frame=single,basicstyle=\ttfamily\small,breaklines=true,language=C]{../src/http.c}
+
+    \section{Приложение Б: листинг файла ./src/http.h}
+    \lstinputlisting[frame=single,basicstyle=\ttfamily\small,breaklines=true,language=C]{../src/http.h}
+
+    \section{Приложение В: листинг файла ./src/internet.c}
+    \lstinputlisting[frame=single,basicstyle=\ttfamily\small,breaklines=true,language=C]{../src/internet.c}
+
+    \section{Приложение Г: листинг файла ./src/internet.h}
+    \lstinputlisting[frame=single,basicstyle=\ttfamily\small,breaklines=true,language=C]{../src/internet.h}
+
+    \section{Приложение Д: листинг файла ./src/list.h}
+    \lstinputlisting[frame=single,basicstyle=\ttfamily\small,breaklines=true,language=C]{../src/list.h}
+
+    \section{Приложение Е: листинг файла ./src/main.c}
+    \lstinputlisting[frame=single,basicstyle=\ttfamily\small,breaklines=true,language=C]{../src/main.c}
+
+    \section{Приложение Ж: листинг файла ./src/messages.h}
+    \lstinputlisting[frame=single,basicstyle=\ttfamily\small,breaklines=true,language=C]{../src/messages.h}
+
+    \section{Приложение И: листинг файла ./src/send\_files.c}
+    \lstinputlisting[frame=single,basicstyle=\ttfamily\small,breaklines=true,language=C]{../src/send\_files.c}
+
+    \section{Приложение К: листинг файла ./src/server.c}
+    \lstinputlisting[frame=single,basicstyle=\ttfamily\small,breaklines=true,language=C]{../src/server.c}
+
+    \section{Приложение Л: листинг файла ./src/server.h}
+    \lstinputlisting[frame=single,basicstyle=\ttfamily\small,breaklines=true,language=C]{../src/server.h}
+
+    \section{Приложение М: листинг файла ./src/transformer.c}
+    \lstinputlisting[frame=single,basicstyle=\ttfamily\small,breaklines=true,language=C]{../src/transformer.c}
+
+    \section{Приложение Н: листинг файла ./src/transformer.h}
+    \lstinputlisting[frame=single,basicstyle=\ttfamily\small,breaklines=true,language=C]{../src/transformer.h}
+
+    \section{Приложение О: листинг файла ./src/transformer\_test.c}
+    \lstinputlisting[frame=single,basicstyle=\ttfamily\small,breaklines=true,language=C]{../src/transformer\_test.c}
+
+
+    \section{Приложение П: листинг файла ./public/equation-list.css}
+    \lstinputlisting[frame=single,basicstyle=\ttfamily\small,breaklines=true,language=C]{../public/equation-list.css}
+
+    \section{Приложение Р: листинг файла ./public/equations.html}
+    \lstinputlisting[frame=single,basicstyle=\ttfamily\small,breaklines=true,language=C]{../public/equations.html}
+
+    \section{Приложение С: листинг файла ./public/equations.xml}
+    \lstinputlisting[frame=single,basicstyle=\ttfamily\small,breaklines=true,language=C]{../public/equations.xml}
+
+    \section{Приложение Т: листинг файла ./public/getstarted.css}
+    \lstinputlisting[frame=single,basicstyle=\ttfamily\small,breaklines=true,language=C]{../public/getstarted.css}
+
+    \section{Приложение У: листинг файла ./public/getstarted.html}
+    \lstinputlisting[frame=single,basicstyle=\ttfamily\small,breaklines=true,language=C]{../public/getstarted.html}
+
+    \section{Приложение Ф: листинг файла ./public/global.css}
+    \lstinputlisting[frame=single,basicstyle=\ttfamily\small,breaklines=true,language=C]{../public/global.css}
+
+    \section{Приложение Х: листинг файла ./public/global.js}
+    \lstinputlisting[frame=single,basicstyle=\ttfamily\small,breaklines=true,language=C]{../public/global.js}
+
+    \section{Приложение Ц: листинг файла ./public/index.css}
+    \lstinputlisting[frame=single,basicstyle=\ttfamily\small,breaklines=true,language=C]{../public/index.css}
+
+    \section{Приложение Ш: листинг файла ./public/index.html}
+    \lstinputlisting[frame=single,basicstyle=\ttfamily\small,breaklines=true,language=C]{../public/index.html}
+
+    \section{Приложение Щ: листинг файла ./public/menu.css}
+    \lstinputlisting[frame=single,basicstyle=\ttfamily\small,breaklines=true,language=C]{../public/menu.css}
+
+    \section{Приложение Э: листинг файла ./public/toggle-switch.css}
+    \lstinputlisting[frame=single,basicstyle=\ttfamily\small,breaklines=true,language=C]{../public/toggle-switch.css}
+
+    \section{Приложение Ю: листинг файла ./public/toggle-switch.js}
+    \lstinputlisting[frame=single,basicstyle=\ttfamily\small,breaklines=true,language=C]{../public/toggle-switch.js}
+
+    \section{Приложение Я: листинг файла ./public/transitions.js}
+    \lstinputlisting[frame=single,basicstyle=\ttfamily\small,breaklines=true,language=C]{../public/transitions.js}
 
     
 
