@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+    <title>Уголок Доказательств</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js"></script>
+
+    <link rel="shortcut icon" href="favicon.png" type="image/x-icon">
+
+    <link rel="stylesheet" href="global.css">
+    <link rel="stylesheet" href="menu.css">
+    <link rel="stylesheet" href="equation-list.css">
+</head>
+<body>
+
+    <a href="index.html"><div class="logo"><img src="logo.svg"></div></a>
+
+    <div class="container">
+
+        <div class="transitions-container" class="equations" id="xmlContent">
+        
+        </div>
+
+    </div>
+
+    <script>
+
+        function call_katex() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$", right: "$", display: false},
+                    {left: "\\[", right: "\\]", display: true}
+                ]
+            });
+        };
+
+        // Загрузка XML файла
+        fetch('equations.xml')
+            .then(response => response.text())
+            .then(data => {
+                // Создание парсера XML
+                const parser = new DOMParser();
+                const xmlDoc = parser.parseFromString(data, 'application/xml');
+
+                // Извлечение данных из XML
+                const equations = xmlDoc.getElementsByTagName('equation');
+                let output = '<div class="equations">';
+
+                for (let i = 0; i < equations.length; i++) {
+                    const title = equations[i].getElementsByTagName('title')[0].textContent;
+                    const description = equations[i].getElementsByTagName('description')[0].textContent;
+                    const proof = equations[i].getElementsByTagName('proof')[0].textContent;
+
+                    output += `<div class="equation"><div class="title">${title}</div><div class="description">${description}</div><div class="proof">${proof}</div></div>`;
+                }
+
+                output += '</div>';
+
+                // Отображение данных на странице
+                document.getElementById('xmlContent').innerHTML = output;
+
+                call_katex();
+            })
+            .catch(error => console.error('Error:', error));
+    </script>
+</body>
+</html>

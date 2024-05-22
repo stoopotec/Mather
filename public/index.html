@@ -8,24 +8,21 @@
 
     <title>Mather</title>
 
-    <!-- <script type="text/javascript"
-      src="http://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-    </script> -->
-
-    <script src="engine.js"></script>
+    <script src="trabsitions.js"></script>
     <link rel="stylesheet" href="menu.css">
     <link rel="stylesheet" href="global.css">
+    <link rel="stylesheet" href="index.css">
 
 </head>
 <body>
 
-    <div class="logo"><img src="logo.svg"></div>
+    <a href="getstarted.html"><div class="logo"><img src="logo.svg"></div></a>
 
     <div class="container">
       <div class="input-container">
 
 
-        <textarea name="equation" id="equation" placeholder="put your equation here">2 + x / 2 = x</textarea>
+        <textarea name="equation" id="equation" placeholder="put your equation here">2 + 2 * 2</textarea>
         <button onclick="produceTransitions()">produce</button>
 
 
@@ -35,19 +32,7 @@
 
 
 
-      <div class="transitions-container">
-
-
-        
-        
-      </div>
-
-      <template class="transition">
-        <div class="transition-container">
-          <p>Transition:</p>
-          <p id="transition-content"></p>
-        <div class="possible"></div>
-      </template>
+      <div class="transitions-container" id="xmlContent"></div>
           
 
     </div>

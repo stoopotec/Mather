@@ -53,10 +53,6 @@ int send_small_file(int socketfd, const char* filename) {
     else
         printf(WARN "content length is %ld, but read only %ld\n", file_stat.st_size, actual_length_readed);
 
-    // printf("Content-Length: %lu\n", content_length);
-    // printf("Content:\n---------------\n");
-    // for (size_t i = 0; i < content_length; ++i) putchar(content[i]);
-    // printf("\n---------------\n");
 
     fclose(file);
 
@@ -88,39 +84,6 @@ int send_small_file(int socketfd, const char* filename) {
         ret += send(socketfd, content, file_stat.st_size, 0);
         return ret;
     }
-    // } else if (content_type[0] == 'i' && content_type[1] == 'm' && content_type[2] == 'a' && content_type[3] == 'g') {
-    //     response = (char*)malloc((file_stat.st_size + 2048) * sizeof(*response));
-    //     response_len = sprintf(response, 
-    //         "HTTP/1.1 200 OK"
-    //         "Content-Type: image/png"
-    //         "Content-Length: %ld"
-    //         "\n"
-    //         "\n", file_stat.st_size
-    //     );
-
-    //     printf(INFO "response is ready\n");
-    
-    //     printf(E_RESET INFO "sending...\n");
-
-
-    //     size_t ret = send(socketfd, response, response_len, MSG_MORE);
-    //     ret += send(socketfd, content, file_stat.st_size, 0);
-    //     return ret;
-
-    // } else {
-    // if (1) {
-    //     response = (char*)malloc((file_stat.st_size + 2048) * sizeof(*response));
-    //     response_len = sprintf(response, 
-    //         "HTTP/1.1 %d %s\n"
-    //         "Content-Type: %s\n"
-    //         "Content-Length: %ld\n"
-    //         "\n"
-    //         "\n"
-    //         "%s", CODE_200_OK, get_code_comment(CODE_200_OK),
-    //         content_type, file_stat.st_size, content
-    //     );
-    // }
-
     printf(INFO "response is ready\n");
     
     printf(E_RESET INFO "sending...\n");

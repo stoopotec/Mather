@@ -62,20 +62,6 @@ int serve_client(int socketfd) {
     
     printf("\tpath: %s\n", filename);
 
-    // printf("\targs: %s\n", (args.length == 0) ? "(args.length == 0)" : "");
-
-    // for (size_t i = 0; i < args.length; ++i) {
-    //     printf("\t\t\'");
-
-    //     for (size_t j = 0; j < args.data[i].key_len; ++j) putchar(args.data[i].key[j]);
-        
-    //     printf("\': \'");
-
-    //     for (size_t j = 0; j < args.data[i].val_len; ++j) putchar(args.data[i].val[j]);
-        
-    //     printf("\'\n");
-    // }
-
 
     enum METHOD_E method = get_method(msg.message.method);
 
@@ -95,25 +81,47 @@ int serve_client(int socketfd) {
 
         printf(INFO "client wants to calculate this silly equation " E_ITALIC "%s" E_RESET "\n", msg.message.body);
 
-        printf(WARN "отправляю заглушку\n");
-        const char* resp = 
+        list_transformation_t transforms = get_all_transformations_s(msg.message.body);
+
+        char* response = calloc(100000, sizeof(char));
+        char* content = calloc(100000, sizeof(char));
+
+        size_t content_length = sprintf(content,
+            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            "<transforamtions>\n"
+                "<transformation>\n"
+                    "<description>%s</description>\n"
+                    "<solution>%s</solution>\n"
+                "</transformation>\n"
+            "</transforamtions>",
+            transforms.data[0].comment,
+            get_string_from_symbol(transforms.data[0].equation.symbols.data[0])
+        );
+
+        size_t len = sprintf(response, 
             "HTTP/1.1 200 OK\n"
-            "Server: Prikol\n"
-            "Connection: keep-alive\n"
             "Content-Type: application/xml\n"
-            "Content-Length: 13\n"
+            "Content-Length: %ld\n"
             "\n"
-            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<div classname=\"transition-list\"><div classname=\"transition\"><div classname=\"description\">описание</div><div classname=\"equation\">"
-            "$${\\displaystyle 1+{\\frac {1}{1\\cdot 3}}+{\\frac {1}{1\\cdot 3\\cdot 5}}+{\\frac {1}{1\\cdot 3\\cdot 5\\cdot 7}}+{\\frac {1}{1\\cdot 3\\cdot 5\\cdot 7\\cdot 9}}+\\ldots +{\\frac {1}{1+\\displaystyle {\\frac {1}{1+\\displaystyle {\\frac {2}{1+\\displaystyle {\\frac {3}{1+\\displaystyle {\\frac {4}{1+\\displaystyle {\\frac {5}{1+\\ldots }}}}}}}}}}}}={\\sqrt {\\frac {e\\cdot \\pi }{2}}}}.$$"
-            "</div></div></div>";
-        send(socketfd, resp, sizeof(resp), 0);
+            "%s",
+            content_length,
+            content
+        );
+
+
+
+        send(socketfd, response, len, 0);
+
+
+
+        free(response);
+        free(content);
 
     } else {
 
         printf(WARN "клиент прислал гадость");
         const char* resp = 
         "HTTP/1.1 501 Not Implemented\n"
-        "Server: Prikol\n"
         "Connection: Close\n"
         "\n"
         "\n";

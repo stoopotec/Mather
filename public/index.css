@@ -1,0 +1,33 @@
+
+.transformations {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+}
+
+.transformation {
+    margin: 10px;
+    width: fit-content;
+    border: 1px solid #e1e1e142;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+.description {
+    font-size: 1.6rem;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-weight: 900;
+    text-align: center; 
+    border-bottom: 1px dashed #e1e1e16e; 
+    padding-bottom: 10px; 
+}
+
+.solution {
+    font-size: 1.2rem;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-bottom: 1px dashed #e1e1e16e; 
+    padding-bottom: 10px; 
+}
